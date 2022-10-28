@@ -34,6 +34,9 @@ public class TeleopCommand extends CommandBase {
   @Override
   public void execute() {
     m_drive.zoomZoom(RobotContainer.getInstance().getXInput().getLeftY(), RobotContainer.getInstance().getXInput().getRightY());
+    //if(RobotContainer.getInstance().getXInput().getXButton()){
+    //  m_drive.cry();
+    //}
   }
 
   // Called once the command ends or is interrupted.
