@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
@@ -12,16 +15,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Drive extends SubsystemBase {
 
   private DifferentialDrive gonkDrive;
-  private PWMSparkMax leftDrive1, leftDrive2, rightDrive1, rightDrive2;
+  CANSparkMax leftDrive1;
+  CANSparkMax leftDrive2;
+  CANSparkMax rightDrive1;
+private CANSparkMax rightDrive2;
   private MotorControllerGroup leftDrive;
   private MotorControllerGroup rightDrive;
 
   /** Creates a new ExampleSubsystem. */
   public Drive() {
-    leftDrive1 = new PWMSparkMax(2);
-    leftDrive2 = new PWMSparkMax(3);
-    rightDrive1 = new PWMSparkMax(0);
-    rightDrive2 = new PWMSparkMax(1);
+    leftDrive1 = new CANSparkMax(1, MotorType.kBrushless);
+    leftDrive2 = new CANSparkMax(2, MotorType.kBrushless);
+    rightDrive1 = new CANSparkMax(3, MotorType.kBrushless);
+    rightDrive2 = new CANSparkMax(4, MotorType.kBrushless);
     leftDrive = new MotorControllerGroup(leftDrive1, leftDrive2);
     rightDrive = new MotorControllerGroup(rightDrive1, rightDrive2);
     leftDrive.setInverted(true);
