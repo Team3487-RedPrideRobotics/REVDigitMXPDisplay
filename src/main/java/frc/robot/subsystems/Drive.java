@@ -5,11 +5,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drive extends SubsystemBase {
@@ -21,6 +25,7 @@ public class Drive extends SubsystemBase {
 private CANSparkMax rightDrive2;
   private MotorControllerGroup leftDrive;
   private MotorControllerGroup rightDrive;
+  private RelativeEncoder leftEncoder;
 
   /** Creates a new ExampleSubsystem. */
   public Drive() {
@@ -32,11 +37,16 @@ private CANSparkMax rightDrive2;
     rightDrive = new MotorControllerGroup(rightDrive1, rightDrive2);
     leftDrive.setInverted(true);
     gonkDrive = new DifferentialDrive(leftDrive , rightDrive);
+
+    leftEncoder = leftDrive1.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+    leftEncoder.setPosition(0);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+   SmartDashboard.putNumber("Drive Speed", leftEncoder.getVelocity() * 0.5 * Math.PI / 60); // Rotation/min * ft/rotation * min/sec = ft/sec 
+   SmartDashboard.putNumber("Drive Position", leftEncoder.getPosition() * 0.5 * Math.PI / 10);
   }
 
   @Override
@@ -49,9 +59,7 @@ private CANSparkMax rightDrive2;
     gonkDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
-  public void cry(){
-    rightDrive1.set(1);
-    rightDrive2.set(1);
-    System.out.println("crying");
+  public void resetEncoders(){
+    leftEncoder.setPosition(0);
   }
 }
