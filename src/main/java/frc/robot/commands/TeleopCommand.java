@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ public class TeleopCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Drive m_drive;
   private final Outtake m_outtake;
+  private final Intake m_intake;
   public NetworkTableEntry driveSpeed;
   private NetworkTableEntry leftReverse;
   private NetworkTableEntry rightReverse;
@@ -30,11 +32,17 @@ public class TeleopCommand extends CommandBase {
   private NetworkTableEntry monoVsDual;
   private NetworkTableEntry shootTopSpeed;
   private NetworkTableEntry shootBottomSpeed;
-  private NetworkTableEntry intakeSpeed;
+  private NetworkTableEntry intakeFrontSpeed;
+  private NetworkTableEntry monoVsDualI;
+  private NetworkTableEntry intakeBackSpeed;
+  private NetworkTableEntry intakeFrontReverse;
+  private NetworkTableEntry intakeBackReverse;
   private int rightReverseDecide = 1;
   private int leftReverseDecide = 1;
   private int topDecide = 1;
   private int bottomDecide = 1;
+  private int frontDecide = 1;
+  private int backDecide = 1;
  
 
   /**
@@ -42,9 +50,10 @@ public class TeleopCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TeleopCommand(Drive drive, Outtake outtake) {
+  public TeleopCommand(Drive drive, Outtake outtake, Intake intake) {
     m_drive = drive;
     m_outtake = outtake;
+    m_intake = intake;
     
     // drive
     driveSpeed = Shuffleboard.getTab("Teleop").add("Drive Speed", Constants.DriveEdits.DRIVE_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
@@ -54,14 +63,21 @@ public class TeleopCommand extends CommandBase {
     // outtake
     shootTopReverse = Shuffleboard.getTab("Teleop").add("Shoot Top Reverse", Constants.OuttakeEdits.SHOOT_TOP_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
     shootBottomReverse = Shuffleboard.getTab("Teleop").add("Shoot Bottom Reverse", Constants.OuttakeEdits.SHOOT_BOTTOM_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-    monoVsDual = Shuffleboard.getTab("Teleop").add("Dual or Mono", Constants.OuttakeEdits.MONO_SHOOT).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+    monoVsDual = Shuffleboard.getTab("Teleop").add("O: Dual or Mono", Constants.OuttakeEdits.MONO_SHOOT).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
     shootTopSpeed = Shuffleboard.getTab("Teleop").add("Shoot Top Or Main Speed", Constants.OuttakeEdits.SHOOT_TOP_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
     shootBottomSpeed = Shuffleboard.getTab("Teleop").add("Shoot Bottom Speed", Constants.OuttakeEdits.SHOOT_BOTTOM_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
 
-    intakeSpeed = Shuffleboard.getTab("Teleop").add("Intake Speed", Constants.OuttakeEdits.INTAKE_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
-    //
+    // intake
+    intakeFrontReverse = Shuffleboard.getTab("Teleop").add("Intake Front Reverse", Constants.IntakeEdits.INTAKE_FRONT_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+    intakeBackReverse = Shuffleboard.getTab("Teleop").add("Intake Back Reverse", Constants.IntakeEdits.INTAKE_BACK_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+    monoVsDualI = Shuffleboard.getTab("Teleop").add("I: Dual or Mono", Constants.IntakeEdits.MONO_SHOOT).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+
+    intakeFrontSpeed = Shuffleboard.getTab("Teleop").add("Intake Front or Main Speed", Constants.IntakeEdits.INTAKE_FRONT_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
+    intakeBackSpeed = Shuffleboard.getTab("Teleop").add("Intake Back Speed", Constants.IntakeEdits.INTAKE_BACK_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
+
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_intake);
     addRequirements(m_drive);
     addRequirements(m_outtake);
   }
@@ -83,8 +99,7 @@ public class TeleopCommand extends CommandBase {
     if (RobotContainer.getInstance().getXButton() == 1) {
       m_drive.resetEncoders();
     }
-
-
+    
     topDecide = shootTopReverse.getBoolean(Constants.OuttakeEdits.SHOOT_TOP_REVERSE)? -1:1;
     bottomDecide = shootBottomReverse.getBoolean(Constants.OuttakeEdits.SHOOT_BOTTOM_REVERSE)? -1:1;
 
@@ -95,9 +110,16 @@ public class TeleopCommand extends CommandBase {
       m_outtake.shoot((RobotContainer.getInstance().getAButton() * shootTopSpeed.getDouble(Constants.OuttakeEdits.SHOOT_TOP_SPEED)*topDecide), (RobotContainer.getInstance().getAButton() * shootBottomSpeed.getDouble(Constants.OuttakeEdits.SHOOT_BOTTOM_SPEED)*bottomDecide));
     }
 
+    frontDecide = intakeFrontReverse.getBoolean(Constants.IntakeEdits.INTAKE_FRONT_REVERSE)? -1:1;
+    backDecide = intakeBackReverse.getBoolean(Constants.IntakeEdits.INTAKE_BACK_REVERSE)? -1:1;
+
     // System.out.println("Y: " + RobotContainer.getInstance().getYButton() + ", Cons: " + Constants.OuttakeEdits.INTAKE_SPEED);
-    m_outtake.intake((RobotContainer.getInstance().getYButton() * intakeSpeed.getDouble(Constants.OuttakeEdits.INTAKE_SPEED)));
-    
+    //m_intake.intake((RobotContainer.getInstance().getYButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)));
+    if (monoVsDualI.getBoolean(Constants.IntakeEdits.MONO_SHOOT)) {
+      m_intake.intakeBall((RobotContainer.getInstance().getYButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)));
+    } else {
+      m_intake.intakeBall((RobotContainer.getInstance().getAButton() * shootTopSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)*frontDecide), (RobotContainer.getInstance().getAButton() * shootBottomSpeed.getDouble(Constants.IntakeEdits.INTAKE_BACK_SPEED)*backDecide));
+    }
     //if(RobotContainer.getInstance().getXInput().getXButton()){
     //  m_drive.cry();
     //} (Don't cry robot it's okay :( ))

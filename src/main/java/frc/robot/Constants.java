@@ -24,7 +24,13 @@ public final class Constants {
         public static int SHOOT_BOTTOM_SPARK = 4;
         public static int SHOOT_TOP_SPARK = 5;
         public static int AIMER_SPARK = 6;
-        public static int INTAKE_SPARK = 7;
+        
+    }
+
+    public static final class IntakeConstants { // The constants for subsystems/Intake.java
+        public static int INTAKE_FRONT_SPARK = 8;
+        public static int INTAKE_BACK_SPARK = 9;
+        
     }
 
     public static final class DriveEdits { // Editable Items in Drive.java
@@ -39,10 +45,19 @@ public final class Constants {
         public static boolean SHOOT_BOTTOM_REVERSE = true;
         public static boolean MONO_SHOOT = true;
 
-        public static double SHOOT_TOP_SPEED = 1; //Top would always be main
+        public static double SHOOT_TOP_SPEED = 1; // Top would always be main
         public static double SHOOT_BOTTOM_SPEED = 1; 
 
-        public static double INTAKE_SPEED = 1;
+        
+    }
+
+    public static final class IntakeEdits {
+        public static boolean INTAKE_FRONT_REVERSE = true;
+        public static boolean INTAKE_BACK_REVERSE = true;
+        public static boolean MONO_SHOOT = true;
+
+        public static double INTAKE_FRONT_SPEED = 1; // Front would always be main
+        public static double INTAKE_BACK_SPEED = 1;
     }
 
     public static final class Controller { // fun controller stuff

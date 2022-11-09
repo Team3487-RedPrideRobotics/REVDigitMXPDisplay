@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -24,6 +25,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive m_drive = new Drive();
   private final Outtake m_outtake = new Outtake();
+  private final Intake m_intake = new Intake();
 
   private final XboxController XInput = new XboxController(0);
 
@@ -61,7 +63,7 @@ public class RobotContainer {
   }
 
   public Command getTeleopCommand(){
-    return new TeleopCommand(m_drive, m_outtake);
+    return new TeleopCommand(m_drive, m_outtake, m_intake);
   }
 
   // copy-ith the evergreen joystick input code (I'm lazy)

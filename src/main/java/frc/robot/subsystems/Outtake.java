@@ -17,7 +17,6 @@ public class Outtake extends SubsystemBase {
   private PWMSparkMax shoot_bottom;
   private MotorControllerGroup shooter;
   private Spark aimer;
-  private Spark intake;
   private Encoder aim_encoder;
   private double kP = 1/71;
   private double aimTheshold = 2;
@@ -38,9 +37,6 @@ public class Outtake extends SubsystemBase {
     // Aiming the shooter
     aimer = new Spark(Constants.OuttakeConstants.AIMER_SPARK);
     aim_encoder = new Encoder(0, 1);
-
-    // Taking in the ball
-    intake = new Spark(Constants.OuttakeConstants.INTAKE_SPARK);
 
     // TODO: set distance per pulse to be equal to 360 degrees per 1 rotation
     aim_encoder.setDistancePerPulse(1);
@@ -74,11 +70,5 @@ public class Outtake extends SubsystemBase {
     shoot_top.set(topPower);
     shoot_bottom.set(bottomPower);
   }
-
-  // intake
-  public void intake(double power){
-    intake.set(power);
-  }
-  
   // methods
 }
