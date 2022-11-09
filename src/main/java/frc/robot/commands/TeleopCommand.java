@@ -101,11 +101,11 @@ public class TeleopCommand extends CommandBase {
       m_drive.resetEncoders();
     }
     
-    topDecide = shootTopReverse.getBoolean(Constants.OuttakeEdits.SHOOT_TOP_REVERSE)? -1:1;
-    bottomDecide = shootBottomReverse.getBoolean(Constants.OuttakeEdits.SHOOT_BOTTOM_REVERSE)? -1:1;
+    topDecide = shootTopReverse.getBoolean(Constants.OuttakeEdits.SHOOT_TOP_REVERSE)? 1:-1;
+    bottomDecide = shootBottomReverse.getBoolean(Constants.OuttakeEdits.SHOOT_BOTTOM_REVERSE)? 1:-1;
 
     if (monoVsDual.getBoolean(Constants.OuttakeEdits.MONO_SHOOT)) {
-      m_outtake.shoot(RobotContainer.getInstance().getAButton()*shootTopSpeed.getDouble(Constants.OuttakeEdits.SHOOT_TOP_SPEED*topDecide));
+      m_outtake.shoot(RobotContainer.getInstance().getAButton()*shootTopSpeed.getDouble(Constants.OuttakeEdits.SHOOT_TOP_SPEED)*topDecide);
     } else {
       // System.out.println("IM USEFUL!!!!");
       m_outtake.shoot((RobotContainer.getInstance().getAButton() * shootTopSpeed.getDouble(Constants.OuttakeEdits.SHOOT_TOP_SPEED)*topDecide), (RobotContainer.getInstance().getAButton() * shootBottomSpeed.getDouble(Constants.OuttakeEdits.SHOOT_BOTTOM_SPEED)*bottomDecide));
@@ -117,9 +117,9 @@ public class TeleopCommand extends CommandBase {
     // System.out.println("Y: " + RobotContainer.getInstance().getYButton() + ", Cons: " + Constants.OuttakeEdits.INTAKE_SPEED);
     //m_intake.intake((RobotContainer.getInstance().getYButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)));
     if (monoVsDualI.getBoolean(Constants.IntakeEdits.MONO_SHOOT)) {
-      m_intake.intakeBall((RobotContainer.getInstance().getYButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)));
+      m_intake.intakeBall((RobotContainer.getInstance().getYButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED) * frontDecide));
     } else {
-      m_intake.intakeBall((RobotContainer.getInstance().getAButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)*frontDecide), (RobotContainer.getInstance().getAButton() * intakeBackSpeed.getDouble(Constants.IntakeEdits.INTAKE_BACK_SPEED)*backDecide));
+      m_intake.intakeBall((RobotContainer.getInstance().getYButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED) * frontDecide), (RobotContainer.getInstance().getYButton() * intakeBackSpeed.getDouble(Constants.IntakeEdits.INTAKE_BACK_SPEED)*backDecide));
     }
     //if(RobotContainer.getInstance().getXInput().getXButton()){
     //  m_drive.cry();
