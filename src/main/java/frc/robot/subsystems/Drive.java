@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
 
@@ -29,13 +30,21 @@ private CANSparkMax rightDrive2;
 
   /** Creates a new ExampleSubsystem. */
   public Drive() {
-    leftDrive1 = new CANSparkMax(1, MotorType.kBrushless);
-    leftDrive2 = new CANSparkMax(2, MotorType.kBrushless);
-    rightDrive1 = new CANSparkMax(3, MotorType.kBrushless);
-    rightDrive2 = new CANSparkMax(4, MotorType.kBrushless);
+    // sparks for the drive 
+    leftDrive1 = new CANSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[0], MotorType.kBrushless);
+    leftDrive2 = new CANSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[1], MotorType.kBrushless);
+    rightDrive1 = new CANSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[0], MotorType.kBrushless);
+    rightDrive2 = new CANSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[1], MotorType.kBrushless);
+
+    // we play stick and stone and make stickstone (combine sparks to do the same thing)
     leftDrive = new MotorControllerGroup(leftDrive1, leftDrive2);
     rightDrive = new MotorControllerGroup(rightDrive1, rightDrive2);
-    leftDrive.setInverted(true);
+    
+    // grug needs to make both work together (inverts some inputs)
+    leftDrive.setInverted(Constants.DriveEdits.LEFT_DRIVE_REVERSE);
+    rightDrive.setInverted(Constants.DriveEdits.RIGHT_DRIVE_REVERSE);
+
+    // the driver
     gonkDrive = new DifferentialDrive(leftDrive , rightDrive);
 
     leftEncoder = leftDrive1.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
@@ -59,7 +68,26 @@ private CANSparkMax rightDrive2;
     gonkDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
+<<<<<<< Updated upstream
   public void resetEncoders(){
     leftEncoder.setPosition(0);
+=======
+  public void cry(){
+    rightDrive1.set(1);
+    rightDrive2.set(1);
+    System.out.println("waaah waaaaaah waaaaaaah im a huge baby look at me");
+  }
+
+  public void cmake(){
+    System.out.println("Me after labotomy");
+    leftDrive.set(1);
+    rightDrive.set(0);
+  }
+
+  public void ltg(){
+    System.out.println("Because you guy's don't possess the JEM gene, that's why you're upset, no JEM equals ANGER!");
+    rightDrive.set(1);
+    leftDrive.set(1);
+>>>>>>> Stashed changes
   }
 }
