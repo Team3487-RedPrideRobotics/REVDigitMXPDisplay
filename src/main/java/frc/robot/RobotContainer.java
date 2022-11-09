@@ -69,31 +69,24 @@ public class RobotContainer {
     if(XInput == null){
       return 0;
     }
-    if(Math.abs(XInput.getLeftY()) > Constants.Controller.DEAD_ZONE){
-      return XInput.getLeftY();
-    }
-    return 0;
+    double item = (Math.abs(XInput.getLeftY()) > Constants.Controller.DEAD_ZONE) ? XInput.getLeftY() : 0;
+    return item;
   }
 
   public double getRightYAxis(){
-
     if(XInput == null){
       return 0;
     }
-    if(Math.abs(XInput.getRightY()) > Constants.Controller.DEAD_ZONE){
-      return XInput.getRightY();
-    }
-    return 0;
+    double item = (Math.abs(XInput.getRightY()) > Constants.Controller.DEAD_ZONE) ? XInput.getRightY() : 0;
+    return item;
   }
 
 public double getLeftXAxis(){
     if(XInput == null){
       return 0;
     }
-    if(Math.abs(XInput.getLeftX()) > Constants.Controller.DEAD_ZONE){
-      return XInput.getLeftX();
-    }
-    return 0;
+    double item = (Math.abs(XInput.getLeftX()) > Constants.Controller.DEAD_ZONE) ? XInput.getLeftX() : 0;
+    return item;
   }
 
   public double getRightXAxis(){
