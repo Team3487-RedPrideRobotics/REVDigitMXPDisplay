@@ -21,20 +21,32 @@ public final class Constants {
     }
 
     public static final class OuttakeConstants { // The constants for subsystems/Outtake.java
-
+        public static int SHOOT_BOTTOM_SPARK = 4;
+        public static int SHOOT_TOP_SPARK = 5;
+        public static int AIMER_SPARK = 6;
+        public static int INTAKE_SPARK = 7;
     }
 
     public static final class DriveEdits { // Editable Items in Drive.java
-        public static int DRIVE_SPEED = 1;
+        public static double DRIVE_SPEED = 1;
         public static boolean LEFT_DRIVE_REVERSE = true;
         public static boolean RIGHT_DRIVE_REVERSE = true;
     }
 
-    public static class OuttakeEdits { // Editable Items in Outtake.java
+    public static final class OuttakeEdits { // Editable Items in Outtake.java
         public static double MANIPULATOR_HOLD_MULTIPLIER = 2.15;
+        public static boolean SHOOT_TOP_REVERSE = true;
+        public static boolean SHOOT_BOTTOM_REVERSE = true;
+        public static boolean MONO_SHOOT = true;
+
+        public static double SHOOT_TOP_SPEED = 1; //Top would always be main
+        public static double SHOOT_BOTTOM_SPEED = 1; 
+
+        public static double INTAKE_SPEED = 1;
     }
 
-    public static class Controller { // fun controller stuff
+    public static final class Controller { // fun controller stuff
         public static double DEAD_ZONE = 0.1;
+        public static boolean SAFETY = false;
     }
 }

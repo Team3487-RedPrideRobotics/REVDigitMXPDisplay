@@ -17,18 +17,31 @@ public class Outtake extends SubsystemBase {
   private PWMSparkMax shoot_bottom;
   private MotorControllerGroup shooter;
   private Spark aimer;
+  private Spark intake;
   private Encoder aim_encoder;
   private double kP = 1/71;
   private double aimTheshold = 2;
 
   /** Creates a new ExampleSubsystem. */
   public Outtake() {
-    shoot_bottom = new PWMSparkMax(4);
-    shoot_top = new PWMSparkMax(5);
-    shoot_top.setInverted(true);
+    // the shooters, stephen curry
+    shoot_bottom = new PWMSparkMax(Constants.OuttakeConstants.SHOOT_BOTTOM_SPARK);
+    shoot_top = new PWMSparkMax(Constants.OuttakeConstants.SHOOT_TOP_SPARK);
+
+    // stephen curry's inverts
+    shoot_top.setInverted(Constants.OuttakeEdits.SHOOT_TOP_REVERSE);
+    shoot_bottom.setInverted(Constants.OuttakeEdits.SHOOT_BOTTOM_REVERSE);
+
+    // make stephen curry use both his arms
     shooter = new MotorControllerGroup(shoot_top, shoot_bottom);
-    aimer = new Spark(6);
+
+    // Aiming the shooter
+    aimer = new Spark(Constants.OuttakeConstants.AIMER_SPARK);
     aim_encoder = new Encoder(0, 1);
+
+    // Taking in the ball
+    intake = new Spark(Constants.OuttakeConstants.INTAKE_SPARK);
+
     // TODO: set distance per pulse to be equal to 360 degrees per 1 rotation
     aim_encoder.setDistancePerPulse(1);
   }
@@ -48,9 +61,24 @@ public class Outtake extends SubsystemBase {
     if(Math.abs(deltaDistance) >= aimTheshold){
       aimer.set(deltaDistance*kP);
     }else{
-      aimer.set(Constants.MANIPULATOR_HOLD_MULTIPLIER);
+      aimer.set(Constants.OuttakeEdits.MANIPULATOR_HOLD_MULTIPLIER);
     }
   }
 
+  // shooters
+  public void shoot(double power) {
+    shooter.set(power);
+  }
+
+  public void shoot(double topPower, double bottomPower) {
+    shoot_top.set(topPower);
+    shoot_bottom.set(bottomPower);
+  }
+
+  // intake
+  public void intake(double power){
+    intake.set(power);
+  }
+  
   // methods
 }

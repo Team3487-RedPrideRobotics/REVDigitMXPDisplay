@@ -23,7 +23,15 @@ public class Drive extends SubsystemBase {
   CANSparkMax leftDrive1;
   CANSparkMax leftDrive2;
   CANSparkMax rightDrive1;
-private CANSparkMax rightDrive2;
+  CANSparkMax rightDrive2;
+
+  /* Testing for Simulation
+  PWMSparkMax leftDrive1;
+  PWMSparkMax leftDrive2;
+  PWMSparkMax rightDrive1;
+  PWMSparkMax rightDrive2;
+  */
+
   private MotorControllerGroup leftDrive;
   private MotorControllerGroup rightDrive;
   private RelativeEncoder leftEncoder;
@@ -35,6 +43,14 @@ private CANSparkMax rightDrive2;
     leftDrive2 = new CANSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[1], MotorType.kBrushless);
     rightDrive1 = new CANSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[0], MotorType.kBrushless);
     rightDrive2 = new CANSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[1], MotorType.kBrushless);
+    
+    
+    /* ONLY FOR TESTS
+    leftDrive1 = new PWMSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[0]);
+    leftDrive2 = new PWMSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[1]);
+    rightDrive1 = new PWMSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[0]);
+    rightDrive2 = new PWMSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[1]);
+    */
 
     // we play stick and stone and make stickstone (combine sparks to do the same thing)
     leftDrive = new MotorControllerGroup(leftDrive1, leftDrive2);
@@ -54,8 +70,8 @@ private CANSparkMax rightDrive2;
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-   SmartDashboard.putNumber("Drive Speed", leftEncoder.getVelocity() * 0.5 * Math.PI / 60); // Rotation/min * ft/rotation * min/sec = ft/sec 
-   SmartDashboard.putNumber("Drive Position", leftEncoder.getPosition() * 0.5 * Math.PI / 10);
+   // SmartDashboard.putNumber("Drive Speed", leftEncoder.getVelocity() * 0.5 * Math.PI / 60); // Rotation/min * ft/rotation * min/sec = ft/sec 
+   // SmartDashboard.putNumber("Drive Position", leftEncoder.getPosition() * 0.5 * Math.PI / 10);
   }
 
   @Override
@@ -68,10 +84,12 @@ private CANSparkMax rightDrive2;
     gonkDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
-<<<<<<< Updated upstream
-  public void resetEncoders(){
+  public void resetEncoders() {
     leftEncoder.setPosition(0);
-=======
+  }
+
+  // funny commands 
+
   public void cry(){
     rightDrive1.set(1);
     rightDrive2.set(1);
@@ -88,6 +106,5 @@ private CANSparkMax rightDrive2;
     System.out.println("Because you guy's don't possess the JEM gene, that's why you're upset, no JEM equals ANGER!");
     rightDrive.set(1);
     leftDrive.set(1);
->>>>>>> Stashed changes
   }
 }
