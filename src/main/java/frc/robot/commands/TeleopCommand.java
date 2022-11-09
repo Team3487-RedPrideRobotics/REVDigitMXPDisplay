@@ -68,6 +68,7 @@ public class TeleopCommand extends CommandBase {
     shootTopSpeed = Shuffleboard.getTab("Teleop").add("Shoot Top Or Main Speed", Constants.OuttakeEdits.SHOOT_TOP_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
     shootBottomSpeed = Shuffleboard.getTab("Teleop").add("Shoot Bottom Speed", Constants.OuttakeEdits.SHOOT_BOTTOM_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
 
+    manipulatorHold = Shuffleboard.getTab("Teleop").add("Manipulator Hold Power", Constants.OuttakeEdits.MANIPULATOR_HOLD_MULTIPLIER).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0.1,"Max",5)).getEntry();
     // intake
     intakeFrontReverse = Shuffleboard.getTab("Teleop").add("Intake Front Reverse", Constants.IntakeEdits.INTAKE_FRONT_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
     intakeBackReverse = Shuffleboard.getTab("Teleop").add("Intake Back Reverse", Constants.IntakeEdits.INTAKE_BACK_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
@@ -118,7 +119,7 @@ public class TeleopCommand extends CommandBase {
     if (monoVsDualI.getBoolean(Constants.IntakeEdits.MONO_SHOOT)) {
       m_intake.intakeBall((RobotContainer.getInstance().getYButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)));
     } else {
-      m_intake.intakeBall((RobotContainer.getInstance().getAButton() * shootTopSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)*frontDecide), (RobotContainer.getInstance().getAButton() * shootBottomSpeed.getDouble(Constants.IntakeEdits.INTAKE_BACK_SPEED)*backDecide));
+      m_intake.intakeBall((RobotContainer.getInstance().getAButton() * intakeFrontSpeed.getDouble(Constants.IntakeEdits.INTAKE_FRONT_SPEED)*frontDecide), (RobotContainer.getInstance().getAButton() * intakeBackSpeed.getDouble(Constants.IntakeEdits.INTAKE_BACK_SPEED)*backDecide));
     }
     //if(RobotContainer.getInstance().getXInput().getXButton()){
     //  m_drive.cry();
