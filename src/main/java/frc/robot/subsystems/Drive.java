@@ -11,15 +11,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
 
   private DifferentialDrive gonkDrive;
-  CANSparkMax leftDrive1;
+  PWMSparkMax leftDrive1;
   CANSparkMax leftDrive2;
-  CANSparkMax rightDrive1;
+  PWMSparkMax rightDrive1;
   CANSparkMax rightDrive2;
 
   /* Testing for Simulation
@@ -36,9 +37,9 @@ public class Drive extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public Drive() {
     // sparks for the drive 
-    leftDrive1 = new CANSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[0], MotorType.kBrushless);
+    leftDrive1 = new PWMSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[0]);
     leftDrive2 = new CANSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[1], MotorType.kBrushless);
-    rightDrive1 = new CANSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[0], MotorType.kBrushless);
+    rightDrive1 = new PWMSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[0]);
     rightDrive2 = new CANSparkMax(Constants.DriveConstants.RIGHT_DRIVE_SPARKS[1], MotorType.kBrushless);
     
     
@@ -60,7 +61,7 @@ public class Drive extends SubsystemBase {
     // the driver
     gonkDrive = new DifferentialDrive(leftDrive , rightDrive);
 
-    leftEncoder = leftDrive1.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+    leftEncoder = leftDrive2.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     leftEncoder.setPosition(0);
   }
 

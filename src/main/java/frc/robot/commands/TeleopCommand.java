@@ -24,8 +24,6 @@ public class TeleopCommand extends CommandBase {
   private final Outtake m_outtake;
   private final Intake m_intake;
   public NetworkTableEntry driveSpeed;
-  private NetworkTableEntry leftReverse;
-  private NetworkTableEntry rightReverse;
   private NetworkTableEntry manipulatorHold;
   private NetworkTableEntry shootTopReverse;
   private NetworkTableEntry shootBottomReverse;
@@ -57,8 +55,6 @@ public class TeleopCommand extends CommandBase {
     
     // drive
     driveSpeed = Shuffleboard.getTab("Teleop").add("Drive Speed", Constants.DriveEdits.DRIVE_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
-    leftReverse = Shuffleboard.getTab("Teleop").add("Left Reversed", Constants.DriveEdits.LEFT_DRIVE_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-    rightReverse = Shuffleboard.getTab("Teleop").add("Right Reversed", Constants.DriveEdits.RIGHT_DRIVE_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
     // outtake
     shootTopReverse = Shuffleboard.getTab("Teleop").add("Shoot Top Reverse", Constants.OuttakeEdits.SHOOT_TOP_REVERSE).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
@@ -93,9 +89,7 @@ public class TeleopCommand extends CommandBase {
   @Override
   public void execute() {
     double[] sticks = new double[] {RobotContainer.getInstance().getLeftYAxis(), RobotContainer.getInstance().getRightYAxis()};
-    leftReverseDecide = leftReverse.getBoolean(Constants.DriveEdits.LEFT_DRIVE_REVERSE)? -1:1;
-    rightReverseDecide = rightReverse.getBoolean(Constants.DriveEdits.RIGHT_DRIVE_REVERSE)? -1:1;
-    m_drive.zoomZoom(sticks[0]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED))*leftReverseDecide, sticks[1]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED))*rightReverseDecide);
+    m_drive.zoomZoom(sticks[0]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED)), sticks[1]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED)));
     
     if (RobotContainer.getInstance().getXButton() == 1) {
       m_drive.resetEncoders();
@@ -124,6 +118,16 @@ public class TeleopCommand extends CommandBase {
     //if(RobotContainer.getInstance().getXInput().getXButton()){
     //  m_drive.cry();
     //} (Don't cry robot it's okay :( ))
+
+    // aimer
+    if(RobotContainer.getInstance().getXInput().getRightBumper()){
+      m_outtake.setAimSpeed(0.5);
+    }else if(RobotContainer.getInstance().getXInput().getLeftBumper()){
+      m_outtake.setAimSpeed(-0.5);
+    }else{
+      m_outtake.setAimSpeed(0.0
+      );
+    }
   }
 
   // Called once the command ends or is interrupted.

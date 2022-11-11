@@ -15,28 +15,28 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveConstants { // The constants for subsytems/Drive.java
-        public static int[] LEFT_DRIVE_SPARKS = {0, 1};
-        public static int[] RIGHT_DRIVE_SPARKS = {2, 3};
+        public static int[] LEFT_DRIVE_SPARKS = {3, 2};
+        public static int[] RIGHT_DRIVE_SPARKS = {0, 1};
         
     }
 
     public static final class OuttakeConstants { // The constants for subsystems/Outtake.java
-        public static int SHOOT_BOTTOM_SPARK = 4;
-        public static int SHOOT_TOP_SPARK = 5;
-        public static int AIMER_SPARK = 6;
+        public static int SHOOT_BOTTOM_SPARK = 3;
+        public static int SHOOT_TOP_SPARK = 4;
+        public static int AIMER_SPARK = 5;
         
     }
 
     public static final class IntakeConstants { // The constants for subsystems/Intake.java
-        public static int INTAKE_FRONT_SPARK = 8;
-        public static int INTAKE_BACK_SPARK = 9;
+        public static int INTAKE_FRONT_SPARK = 7;
+        public static int INTAKE_BACK_SPARK = 4;
         
     }
 
     public static final class DriveEdits { // Editable Items in Drive.java
         public static double DRIVE_SPEED = 1;
         public static boolean LEFT_DRIVE_REVERSE = true;
-        public static boolean RIGHT_DRIVE_REVERSE = true;
+        public static boolean RIGHT_DRIVE_REVERSE = false;
     }
 
     public static final class OuttakeEdits { // Editable Items in Outtake.java

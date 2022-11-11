@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
@@ -13,8 +16,8 @@ import frc.robot.Constants;
 
 public class Outtake extends SubsystemBase {
 
-  private PWMSparkMax shoot_top;
-  private PWMSparkMax shoot_bottom;
+  private CANSparkMax shoot_top;
+  private CANSparkMax shoot_bottom;
   private MotorControllerGroup shooter;
   private Spark aimer;
   private Encoder aim_encoder;
@@ -24,8 +27,8 @@ public class Outtake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public Outtake() {
     // the shooters, stephen curry
-    shoot_bottom = new PWMSparkMax(Constants.OuttakeConstants.SHOOT_BOTTOM_SPARK);
-    shoot_top = new PWMSparkMax(Constants.OuttakeConstants.SHOOT_TOP_SPARK);
+    shoot_bottom = new CANSparkMax(Constants.OuttakeConstants.SHOOT_BOTTOM_SPARK, MotorType.kBrushless);
+    shoot_top = new CANSparkMax(Constants.OuttakeConstants.SHOOT_TOP_SPARK, MotorType.kBrushless);
 
     // stephen curry's inverts
     shoot_top.setInverted(Constants.OuttakeEdits.SHOOT_TOP_REVERSE);
@@ -69,6 +72,10 @@ public class Outtake extends SubsystemBase {
   public void shoot(double topPower, double bottomPower) {
     shoot_top.set(topPower);
     shoot_bottom.set(bottomPower);
+  }
+
+  public void setAimSpeed(double speed){
+    aimer.set(speed);
   }
   // methods
 }

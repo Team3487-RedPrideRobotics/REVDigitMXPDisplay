@@ -20,6 +20,7 @@ public class Intake extends SubsystemBase {
     // Taking in the ball
     intakeFront = new Spark(Constants.IntakeConstants.INTAKE_FRONT_SPARK);
     intakeBack = new Spark(Constants.IntakeConstants.INTAKE_BACK_SPARK);
+    intakeBack.setInverted(true);
 
     intake = new MotorControllerGroup(intakeFront, intakeBack);
   }
