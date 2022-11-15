@@ -29,6 +29,8 @@ public class RobotContainer {
 
   private final XboxController XInput = new XboxController(0);
 
+  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drive, m_outtake, m_intake);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
@@ -63,7 +65,7 @@ public class RobotContainer {
   }
 
   public Command getTeleopCommand(){
-    return new TeleopCommand(m_drive, m_outtake, m_intake);
+    return m_teleopCommand;
   }
 
   // copy-ith the evergreen joystick input code (I'm lazy)

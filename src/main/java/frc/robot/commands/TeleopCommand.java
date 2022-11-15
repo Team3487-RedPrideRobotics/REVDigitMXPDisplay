@@ -105,6 +105,10 @@ public class TeleopCommand extends CommandBase {
       m_outtake.shoot((RobotContainer.getInstance().getAButton() * shootTopSpeed.getDouble(Constants.OuttakeEdits.SHOOT_TOP_SPEED)*topDecide), (RobotContainer.getInstance().getAButton() * shootBottomSpeed.getDouble(Constants.OuttakeEdits.SHOOT_BOTTOM_SPEED)*bottomDecide));
     }
 
+    if(RobotContainer.getInstance().getXInput().getBButton()){
+      m_outtake.shootAtRawSpeed(3000);
+    }
+
     frontDecide = intakeFrontReverse.getBoolean(Constants.IntakeEdits.INTAKE_FRONT_REVERSE)? -1:1;
     backDecide = intakeBackReverse.getBoolean(Constants.IntakeEdits.INTAKE_BACK_REVERSE)? -1:1;
 
@@ -125,8 +129,7 @@ public class TeleopCommand extends CommandBase {
     }else if(RobotContainer.getInstance().getXInput().getLeftBumper()){
       m_outtake.setAimSpeed(-0.5);
     }else{
-      m_outtake.setAimSpeed(0.0
-      );
+      m_outtake.setAimingVoltage(Constants.OuttakeEdits.MANIPULATOR_HOLD_MULTIPLIER);
     }
   }
 
