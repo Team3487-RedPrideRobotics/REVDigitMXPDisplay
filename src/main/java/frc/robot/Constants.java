@@ -64,4 +64,6 @@ public final class Constants {
         public static double DEAD_ZONE = 0.1;
         public static boolean SAFETY = false;
     }
+
+    public static double ACCELERATION_OF_GRAVITY = 9.8;
 }
