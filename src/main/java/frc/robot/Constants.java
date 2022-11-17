@@ -65,5 +65,27 @@ public final class Constants {
         public static boolean SAFETY = false;
     }
 
+    public static final class OuttakePID{
+        // top shooter
+        public static double kP_shooter_top = 2.5914E-07;
+        public static double kS_shooter_top = 0.2512;
+        public static double kV_shooter_top = 0.12627;
+        public static double kA_shooter_top = 0.0052606;
+
+        // bottom shooter
+        public static double kP_shooter_bottom = 3.9983E-05;
+        public static double kS_shooter_bottom = 0.15221;
+        public static double kV_shooter_bottom = 0.12935;
+        public static double kA_shooter_bottom = 0.019131;
+
+        public static double kI_shooter = 0;
+        public static double kD_shooter = 0;
+        public static double kIz_shooter = 0;
+        public static double kFF_shooter = 0;
+        public static double kMinOutput_shooter = -1;
+        public static double kMaxOutput_shooter = 1;
+        public static double maxRPM = 5800;
+    }
+
     public static double ACCELERATION_OF_GRAVITY = 9.8;
 }

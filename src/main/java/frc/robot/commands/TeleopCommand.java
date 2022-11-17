@@ -106,7 +106,7 @@ public class TeleopCommand extends CommandBase {
     }
 
     if(RobotContainer.getInstance().getXInput().getBButton()){
-      m_outtake.shootAtRawSpeed(3000);
+      m_outtake.shootAtRawSpeed(3000/60);
     }
 
     frontDecide = intakeFrontReverse.getBoolean(Constants.IntakeEdits.INTAKE_FRONT_REVERSE)? -1:1;
