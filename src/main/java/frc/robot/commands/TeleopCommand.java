@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class TeleopCommand extends CommandBase {
-  private static final double TARGET_HEIGHT = 0;
-  private static final double TARGET_DISTANCE = 0;
-  private static final double TARGET_ENTRY_ANGLE = 0;
+  private static final double TARGET_HEIGHT = (36-26) * 2.54 / 100; //in * cm/in * m/cm
+  private static final double TARGET_DISTANCE = 155*2.54/100; // in *cm/in * m/cm
+  private static final double TARGET_ENTRY_ANGLE = 45 * Math.PI/180; // degrees * radians/degree
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Drive m_drive;
   private final Outtake m_outtake;
