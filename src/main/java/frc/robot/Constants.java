@@ -56,8 +56,8 @@ public final class Constants {
         public static boolean INTAKE_BACK_REVERSE = true;
         public static boolean MONO_SHOOT = true;
 
-        public static double INTAKE_FRONT_SPEED = 1; // Front would always be main
-        public static double INTAKE_BACK_SPEED = 1;
+        public static double INTAKE_FRONT_SPEED = 0.46; // Front would always be main
+        public static double INTAKE_BACK_SPEED = 0.46;
     }
 
     public static final class Controller { // fun controller stuff
@@ -87,5 +87,5 @@ public final class Constants {
         public static double maxRPM = 5800;
     }
 
-    public static double ACCELERATION_OF_GRAVITY = 9.8;
+    public static double ACCELERATION_OF_GRAVITY = 9.8; // meters per second squared
 }

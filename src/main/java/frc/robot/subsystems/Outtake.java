@@ -28,10 +28,10 @@ public class Outtake extends SubsystemBase {
   private CANSparkMax shoot_top;
   private CANSparkMax shoot_bottom;
   private MotorControllerGroup shooter;
-  private Spark aimer;
-  private Encoder aim_encoder;
+  private CANSparkMax aimer;
+  private RelativeEncoder aim_encoder;
   private double kP_aimer = 1/71;
-  private double aimTheshold = 2;
+  private double aimTheshold = 2*Math.PI/180;
   private double spin_ratio = 1; //ratio between top and bottom speed
   private double top_radius = 2d/2d*2.54/100; // radius of top flywheel in meters
   private double bottom_radius = 4d/2d*2.54/100; // radius of bottom flywheel in meters
@@ -39,7 +39,6 @@ public class Outtake extends SubsystemBase {
   private RelativeEncoder bottom_encoder;
   private SparkMaxPIDController PIDController_top;
   private SparkMaxPIDController PIDController_bottom;
-  private NetworkTableEntry kP_entry;
   private SimpleMotorFeedforward feedforward_top;
   private SimpleMotorFeedforward feedforward_bottom;
 
@@ -57,12 +56,10 @@ public class Outtake extends SubsystemBase {
     shooter = new MotorControllerGroup(shoot_top, shoot_bottom);
 
     // Aiming the shooter
-    aimer = new Spark(Constants.OuttakeConstants.AIMER_SPARK);
-    aim_encoder = new Encoder(0, 1);
+    aimer = new CANSparkMax(Constants.OuttakeConstants.AIMER_SPARK, MotorType.kBrushless);
+    aim_encoder = aimer.getEncoder();
 
     // TODO: set distance per pulse to be equal to 360 degrees per 1 rotation
-    aim_encoder.setDistancePerPulse(1);
-
     top_encoder = shoot_top.getEncoder();
     top_encoder.setPosition(0);
     bottom_encoder = shoot_bottom.getEncoder();
@@ -105,13 +102,24 @@ public class Outtake extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public void go_to_angle(double angle){
-    double deltaDistance = aim_encoder.getDistance() - angle;
+  /**
+   * PID control to move shooter to specific angle
+   * @param angle in radians
+   * @return boolean value for whether the aimer is within the error threshold
+   */
+  public boolean go_to_angle(double angle){
+    double deltaDistance = aim_encoder.getPosition() - angle;
     if(Math.abs(deltaDistance) >= aimTheshold){
       aimer.set(deltaDistance*kP_aimer);
+      return false;
     }else{
-      aimer.set(Constants.OuttakeEdits.MANIPULATOR_HOLD_MULTIPLIER);
+      aimer.set(0);
+      return true;
     }
+  }
+  
+  public void resetAimEncoder(){
+    aim_encoder.setPosition(0);
   }
 
   // shooters
