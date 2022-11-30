@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class TeleopCommand extends CommandBase {
-  private static final double TARGET_HEIGHT = (36-26) * 2.54 / 100; //in * cm/in * m/cm
-  private static final double TARGET_DISTANCE = 155*2.54/100; // in *cm/in * m/cm
-  private static final double TARGET_ENTRY_ANGLE = 45 * Math.PI/180; // degrees * radians/degree
+  private static final double TARGET_HEIGHT = (10) * 12 * 2.54 / 100; //in * cm/in * m/cm
+  private static final double TARGET_DISTANCE = 7.016; // in *cm/in * m/cm
+  private static final double TARGET_ENTRY_ANGLE = -45 * Math.PI/180; // degrees * radians/degree
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Drive m_drive;
   private final Outtake m_outtake;
@@ -101,7 +101,6 @@ public class TeleopCommand extends CommandBase {
     m_drive.zoomZoom(sticks[0]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED)), sticks[1]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED)));
     
     if (RobotContainer.getInstance().getXButton() == 1) {
-      Timer.delay(5);
       if(RobotContainer.getInstance().getXInput().getXButtonPressed()){
         reset_timer.reset();
       }
@@ -136,9 +135,9 @@ public class TeleopCommand extends CommandBase {
 
     // aimer
     if(RobotContainer.getInstance().getXInput().getRightBumper()){
-      m_outtake.setAimSpeed(0.5);
+      m_outtake.setAimSpeed(0.3);
     }else if(RobotContainer.getInstance().getXInput().getLeftBumper()){
-      m_outtake.setAimSpeed(-0.5);
+      m_outtake.setAimSpeed(-0.3);
     }else{
       m_outtake.setAimingVoltage(0);
     }
@@ -148,10 +147,17 @@ public class TeleopCommand extends CommandBase {
     // autoaiming and firing
     if(RobotContainer.getInstance().getXInput().getBButton()){
       double[] trajectory = TrajectoryHelper.calculateTargetTrajectory(TARGET_HEIGHT, TARGET_DISTANCE, TARGET_ENTRY_ANGLE);
-      if(m_outtake.go_to_angle(trajectory[0])){
+      System.out.println(trajectory[0]);
+      System.out.println(trajectory[1]);
+      if(m_outtake.go_to_angle(Math.PI/2 - trajectory[0])){
+        m_outtake.setAimingVoltage(0);
         m_outtake.shootAtSpeed(trajectory[1]);
-        m_intake.intakeBall(Constants.IntakeEdits.INTAKE_FRONT_SPEED, Constants.IntakeEdits.INTAKE_BACK_SPEED);
       }
+    }
+
+    // shooting ball
+    if(RobotContainer.getInstance().getXInput().getRightTriggerAxis() > Constants.IntakeEdits.INTAKE_DEADZONE){
+      m_intake.intakeBall(Constants.IntakeEdits.INTAKE_FRONT_SPEED, Constants.IntakeEdits.INTAKE_BACK_SPEED);
     }
   }
 

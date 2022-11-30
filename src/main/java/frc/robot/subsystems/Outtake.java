@@ -30,9 +30,9 @@ public class Outtake extends SubsystemBase {
   private MotorControllerGroup shooter;
   private CANSparkMax aimer;
   private RelativeEncoder aim_encoder;
-  private double kP_aimer = 1/71;
+  private double kP_aimer = 1;
   private double aimTheshold = 2*Math.PI/180;
-  private double spin_ratio = 1; //ratio between top and bottom speed
+  private double spin_ratio = 3; //ratio between bottom and top linear speed
   private double top_radius = 2d/2d*2.54/100; // radius of top flywheel in meters
   private double bottom_radius = 4d/2d*2.54/100; // radius of bottom flywheel in meters
   private RelativeEncoder top_encoder;
@@ -93,7 +93,7 @@ public class Outtake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Top Velocity", top_encoder.getVelocity());
-    SmartDashboard.putNumber("Bottom Position", bottom_encoder.getPosition());
+    SmartDashboard.putNumber("Aim Position", aim_encoder.getPosition());
     SmartDashboard.putNumber("Bottom Velocity", bottom_encoder.getVelocity());
   }
 
@@ -108,7 +108,7 @@ public class Outtake extends SubsystemBase {
    * @return boolean value for whether the aimer is within the error threshold
    */
   public boolean go_to_angle(double angle){
-    double deltaDistance = aim_encoder.getPosition() - angle;
+    double deltaDistance = angle - aim_encoder.getPosition();
     if(Math.abs(deltaDistance) >= aimTheshold){
       aimer.set(deltaDistance*kP_aimer);
       return false;
@@ -142,9 +142,10 @@ public class Outtake extends SubsystemBase {
    * @param speed the desired speed of the ball in meters per second
    */
   public void shootAtSpeed(double speed){
-    double linear_top_speed = Math.sqrt(speed/spin_ratio);
-    double rotation_top_speed = linear_top_speed/top_radius;
-    double rotation_bottom_speed = linear_top_speed*spin_ratio/bottom_radius;
+    double rotation_top_speed = 2*speed/(top_radius*(1+spin_ratio));
+    double rotation_bottom_speed = spin_ratio * rotation_top_speed * bottom_radius/ top_radius;
+
+    SmartDashboard.putNumber("bottom voltage",feedforward_bottom.calculate(rotation_bottom_speed));
 
     shoot_bottom.setVoltage(feedforward_bottom.calculate(rotation_bottom_speed));
     shoot_top.setVoltage(feedforward_top.calculate(rotation_top_speed));

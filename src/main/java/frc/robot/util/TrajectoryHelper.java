@@ -9,8 +9,8 @@ public class TrajectoryHelper {
      * 
      * @param delta_height height from the projectile's initial position to the target in meters
      * @param distance horizontal distance from the target in meters
-     * @param entry_angle desired angle for the projectile to enter the target at in radians
-     * @return double[] {target_angle, target_velocity} where target_angle and target_velocity are the angle in radians and velocity in meters per second, respectively, that a projectile must start at to reach the target.
+     * @param entry_angle desired angle for the projectile to enter the target at from horizontal in radians
+     * @return double[] {target_angle, target_velocity} where target_angle and target_velocity are the angle from horizontal in radians and velocity in meters per second, respectively, that a projectile must start at to reach the target.
      *
      */
     
