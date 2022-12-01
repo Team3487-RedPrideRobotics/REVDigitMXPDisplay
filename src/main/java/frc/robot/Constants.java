@@ -17,6 +17,8 @@ public final class Constants {
     public static final class DriveConstants { // The constants for subsytems/Drive.java
         public static final double START_X = 0;
         public static final double START_Y = 0;
+        public static final double DRIVE_POSITION_SCALE = 1.0/10.5 * (6 * Math.PI) * 2.54/100; // rotations / encoder unit * (wheel diameter in inches * pi) * cm / in * m / cm = meters / encoder unit
+        public static final double DRIVE_VELOCITY_SCALE = 1.0 / 60 * (6 * Math.PI) * 2.54/100; // rotations / minute * minutes / second * (wheel diameter in inches * pi) * cm / in * m / cm = meters / second
         public static int[] LEFT_DRIVE_SPARKS = {3, 2};
         public static int[] RIGHT_DRIVE_SPARKS = {0, 1};
         
@@ -39,6 +41,8 @@ public final class Constants {
         public static double DRIVE_SPEED = 1;
         public static boolean LEFT_DRIVE_REVERSE = true;
         public static boolean RIGHT_DRIVE_REVERSE = false;
+        public static boolean LEFT_ENCODER_REVERSE = false;
+        public static boolean RIGHT_ENCODER_REVERSE = true;
     }
 
     public static final class OuttakeEdits { // Editable Items in Outtake.java

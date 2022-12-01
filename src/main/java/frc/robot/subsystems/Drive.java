@@ -77,11 +77,20 @@ public class Drive extends SubsystemBase {
 
     leftEncoder = leftDrive2.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     leftEncoder.setPosition(0);
+    leftEncoder.setInverted(Constants.DriveEdits.LEFT_ENCODER_REVERSE);
+    leftEncoder.setPositionConversionFactor(Constants.DriveConstants.DRIVE_POSITION_SCALE);
+    leftEncoder.setVelocityConversionFactor(Constants.DriveConstants.DRIVE_VELOCITY_SCALE);
 
     rightEncoder = rightDrive2.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+    rightEncoder.setPosition(0);
+    rightEncoder.setInverted(Constants.DriveEdits.RIGHT_ENCODER_REVERSE);
+    rightEncoder.setPositionConversionFactor(Constants.DriveConstants.DRIVE_POSITION_SCALE);
+    rightEncoder.setVelocityConversionFactor(Constants.DriveConstants.DRIVE_VELOCITY_SCALE);
 
     // odometry
     gyroscope = new ADXRS450_Gyro();
+    gyroscope.calibrate();
+    gyroscope.reset();
     m_pose = new Pose2d(Constants.DriveConstants.START_X, Constants.DriveConstants.START_Y, new Rotation2d());
     m_odometry = new DifferentialDrivePoseEstimator(gyroscope.getRotation2d(), m_pose,
     new MatBuilder<>(Nat.N5(), Nat.N1()).fill(0.02, 0.02, 0.01, 0.02, 0.02), // State measurement standard deviations. X, Y, theta.
