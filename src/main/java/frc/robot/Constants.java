@@ -15,6 +15,8 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveConstants { // The constants for subsytems/Drive.java
+        public static final double START_X = 0;
+        public static final double START_Y = 0;
         public static int[] LEFT_DRIVE_SPARKS = {3, 2};
         public static int[] RIGHT_DRIVE_SPARKS = {0, 1};
         
