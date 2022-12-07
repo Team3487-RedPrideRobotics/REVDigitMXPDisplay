@@ -14,9 +14,15 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -47,9 +53,24 @@ public class Drive extends SubsystemBase {
   private Gyro gyroscope;
   private RelativeEncoder rightEncoder;
   private Pose2d m_pose;
+  private NetworkTableInstance inst;
+  private NetworkTable datatable;
+  private NetworkTableEntry yEntry;
+  private NetworkTableEntry xEntry;
+  private NetworkTableEntry angleEntry;
 
   /** Creates a new ExampleSubsystem. */
   public Drive() {
+     //get the default instance of NetworkTables
+    inst = NetworkTableInstance.getDefault();
+
+      //get a reference to the subtable called "datatable"
+    datatable = inst.getTable("Vision");
+
+      //get a reference to key in "datatable" called "Y"
+    yEntry = datatable.getEntry("y");
+    xEntry = datatable.getEntry("x");
+    angleEntry = datatable.getEntry("angle");
     // sparks for the drive 
     leftDrive1 = new PWMSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[0]);
     leftDrive2 = new CANSparkMax(Constants.DriveConstants.LEFT_DRIVE_SPARKS[1], MotorType.kBrushless);
@@ -77,13 +98,11 @@ public class Drive extends SubsystemBase {
 
     leftEncoder = leftDrive2.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     leftEncoder.setPosition(0);
-    leftEncoder.setInverted(Constants.DriveEdits.LEFT_ENCODER_REVERSE);
     leftEncoder.setPositionConversionFactor(Constants.DriveConstants.DRIVE_POSITION_SCALE);
     leftEncoder.setVelocityConversionFactor(Constants.DriveConstants.DRIVE_VELOCITY_SCALE);
 
     rightEncoder = rightDrive2.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     rightEncoder.setPosition(0);
-    rightEncoder.setInverted(Constants.DriveEdits.RIGHT_ENCODER_REVERSE);
     rightEncoder.setPositionConversionFactor(Constants.DriveConstants.DRIVE_POSITION_SCALE);
     rightEncoder.setVelocityConversionFactor(Constants.DriveConstants.DRIVE_VELOCITY_SCALE);
 
@@ -96,6 +115,10 @@ public class Drive extends SubsystemBase {
     new MatBuilder<>(Nat.N5(), Nat.N1()).fill(0.02, 0.02, 0.01, 0.02, 0.02), // State measurement standard deviations. X, Y, theta.
     new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // Local measurement standard deviations. Left encoder, right encoder, gyro.
     new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01)); // Global measurement standard deviations. X, Y, and theta. 
+    yEntry.addListener(event -> {
+      Pose2d previous = m_odometry.getEstimatedPosition();
+      m_odometry.addVisionMeasurement(new Pose2d(new Translation2d(xEntry.getDouble(previous.getX()), yEntry.getDouble(previous.getY())), new Rotation2d(angleEntry.getDouble(previous.getRotation().getRadians()))), Timer.getFPGATimestamp());
+   }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
 
   @Override
@@ -108,6 +131,7 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("Drive Left Position", leftEncoder.getPosition());
     SmartDashboard.putNumber("Drive Right Position", rightEncoder.getPosition());
     SmartDashboard.putNumber("Gyro Angle", gyroAngle.getDegrees());
+
   }
 
   @Override

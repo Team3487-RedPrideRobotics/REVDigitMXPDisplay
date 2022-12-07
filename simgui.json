@@ -44,6 +44,7 @@
       "/LiveWindow/Drive": "Subsystem",
       "/LiveWindow/Intake": "Subsystem",
       "/LiveWindow/Outtake": "Subsystem",
+      "/LiveWindow/Ungrouped/ADXRS450_Gyro[0]": "Gyro",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
       "/LiveWindow/Ungrouped/MotorControllerGroup[3]": "Motor Controller",
       "/LiveWindow/Ungrouped/MotorControllerGroup[4]": "Motor Controller",
@@ -51,6 +52,16 @@
       "/LiveWindow/Ungrouped/Spark[5]": "Motor Controller",
       "/LiveWindow/Ungrouped/Spark[6]": "Motor Controller",
       "/LiveWindow/Ungrouped/Spark[7]": "Motor Controller"
+    }
+  },
+  "NetworkTables": {
+    "FMSInfo": {
+      "open": true
+    },
+    "Shuffleboard": {
+      "Teleop": {
+        "open": true
+      }
     }
   }
 }

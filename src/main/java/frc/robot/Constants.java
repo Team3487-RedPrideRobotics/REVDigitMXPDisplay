@@ -41,8 +41,6 @@ public final class Constants {
         public static double DRIVE_SPEED = 1;
         public static boolean LEFT_DRIVE_REVERSE = true;
         public static boolean RIGHT_DRIVE_REVERSE = false;
-        public static boolean LEFT_ENCODER_REVERSE = false;
-        public static boolean RIGHT_ENCODER_REVERSE = true;
     }
 
     public static final class OuttakeEdits { // Editable Items in Outtake.java
