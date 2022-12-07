@@ -125,9 +125,9 @@ public class TeleopCommand extends CommandBase {
 
     // aimer
     if(RobotContainer.getInstance().getXInput().getRightBumper()){
-      m_outtake.setAimSpeed(0.5);
+      m_outtake.setAimSpeed(0.35);
     }else if(RobotContainer.getInstance().getXInput().getLeftBumper()){
-      m_outtake.setAimSpeed(-0.5);
+      m_outtake.setAimSpeed(-0.35);
     }else{
       m_outtake.setAimingVoltage(Constants.OuttakeEdits.MANIPULATOR_HOLD_MULTIPLIER);
     }
