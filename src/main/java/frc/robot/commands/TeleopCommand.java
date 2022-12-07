@@ -9,16 +9,21 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
+import frc.robot.util.TrajectoryHelper;
 
 import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class TeleopCommand extends CommandBase {
+  private static final double TARGET_HEIGHT = (10) * 12 * 2.54 / 100; //in * cm/in * m/cm
+  private static final double TARGET_DISTANCE = 7.016; // in *cm/in * m/cm
+  private static final double TARGET_ENTRY_ANGLE = -45 * Math.PI/180; // degrees * radians/degree
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Drive m_drive;
   private final Outtake m_outtake;
@@ -41,6 +46,7 @@ public class TeleopCommand extends CommandBase {
   private int bottomDecide = 1;
   private int frontDecide = 1;
   private int backDecide = 1;
+  private Timer reset_timer;
  
 
   /**
@@ -73,6 +79,7 @@ public class TeleopCommand extends CommandBase {
     intakeFrontSpeed = Shuffleboard.getTab("Teleop").add("Intake Front or Main Speed", Constants.IntakeEdits.INTAKE_FRONT_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
     intakeBackSpeed = Shuffleboard.getTab("Teleop").add("Intake Back Speed", Constants.IntakeEdits.INTAKE_BACK_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
 
+    reset_timer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_intake);
     addRequirements(m_drive);
@@ -83,6 +90,8 @@ public class TeleopCommand extends CommandBase {
   @Override
   public void initialize() {
     m_drive.resetEncoders();
+    m_outtake.resetAimEncoder();
+    reset_timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -92,7 +101,12 @@ public class TeleopCommand extends CommandBase {
     m_drive.zoomZoom(sticks[0]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED)), sticks[1]*Math.sqrt(driveSpeed.getDouble(Constants.DriveEdits.DRIVE_SPEED)));
     
     if (RobotContainer.getInstance().getXButton() == 1) {
-      m_drive.resetEncoders();
+      if(RobotContainer.getInstance().getXInput().getXButtonPressed()){
+        reset_timer.reset();
+      }
+      if(reset_timer.get() >= 2){
+        m_outtake.resetAimEncoder();
+      }
     }
     
     topDecide = shootTopReverse.getBoolean(Constants.OuttakeEdits.SHOOT_TOP_REVERSE)? 1:-1;
@@ -103,10 +117,6 @@ public class TeleopCommand extends CommandBase {
     } else {
       // System.out.println("IM USEFUL!!!!");
       m_outtake.shoot((RobotContainer.getInstance().getAButton() * shootTopSpeed.getDouble(Constants.OuttakeEdits.SHOOT_TOP_SPEED)*topDecide), (RobotContainer.getInstance().getAButton() * shootBottomSpeed.getDouble(Constants.OuttakeEdits.SHOOT_BOTTOM_SPEED)*bottomDecide));
-    }
-
-    if(RobotContainer.getInstance().getXInput().getBButton()){
-      m_outtake.shootAtRawSpeed(3000);
     }
 
     frontDecide = intakeFrontReverse.getBoolean(Constants.IntakeEdits.INTAKE_FRONT_REVERSE)? -1:1;
@@ -125,11 +135,29 @@ public class TeleopCommand extends CommandBase {
 
     // aimer
     if(RobotContainer.getInstance().getXInput().getRightBumper()){
-      m_outtake.setAimSpeed(0.35);
+      m_outtake.setAimSpeed(0.3);
     }else if(RobotContainer.getInstance().getXInput().getLeftBumper()){
-      m_outtake.setAimSpeed(-0.35);
+      m_outtake.setAimSpeed(-0.3);
     }else{
-      m_outtake.setAimingVoltage(Constants.OuttakeEdits.MANIPULATOR_HOLD_MULTIPLIER);
+      m_outtake.setAimingVoltage(0);
+    }
+
+
+
+    // autoaiming and firing
+    if(RobotContainer.getInstance().getXInput().getBButton()){
+      double[] trajectory = TrajectoryHelper.calculateTargetTrajectory(TARGET_HEIGHT, TARGET_DISTANCE, TARGET_ENTRY_ANGLE);
+      System.out.println(trajectory[0]);
+      System.out.println(trajectory[1]);
+      if(m_outtake.go_to_angle(Math.PI/2 - trajectory[0])){
+        m_outtake.setAimingVoltage(0);
+        m_outtake.shootAtSpeed(trajectory[1]);
+      }
+    }
+
+    // shooting ball
+    if(RobotContainer.getInstance().getXInput().getRightTriggerAxis() > Constants.IntakeEdits.INTAKE_DEADZONE){
+      m_intake.intakeBall(Constants.IntakeEdits.INTAKE_FRONT_SPEED, Constants.IntakeEdits.INTAKE_BACK_SPEED);
     }
   }
 
