@@ -9,6 +9,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import org.opencv.core.Mat;
+
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -204,5 +206,9 @@ public class Drive extends SubsystemBase {
 
   public void turnToGoal(){
     turnToAngle(Math.atan2(Constants.DriveEdits.GOAL_POSE.getX()-m_pose.getX(), Constants.DriveEdits.GOAL_POSE.getY()-m_pose.getY()));
+  }
+
+  public double getGoalDistance(){
+    return(Math.sqrt(Math.pow(Constants.DriveEdits.GOAL_POSE.getX()-m_pose.getX(), 2)+Math.pow(Constants.DriveEdits.GOAL_POSE.getY()-m_pose.getY(),2)));
   }
 }

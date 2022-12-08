@@ -146,7 +146,7 @@ public class TeleopCommand extends CommandBase {
 
     // autoaiming and firing
     if(RobotContainer.getInstance().getXInput().getBButton()){
-      double[] trajectory = TrajectoryHelper.calculateTargetTrajectory(TARGET_HEIGHT, TARGET_DISTANCE, TARGET_ENTRY_ANGLE);
+      double[] trajectory = TrajectoryHelper.calculateTargetTrajectory(TARGET_HEIGHT, m_drive.getGoalDistance(), TARGET_ENTRY_ANGLE);
       System.out.println(trajectory[0]);
       System.out.println(trajectory[1]);
       m_drive.turnToGoal();
