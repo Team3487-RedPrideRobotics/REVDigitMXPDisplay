@@ -149,6 +149,7 @@ public class TeleopCommand extends CommandBase {
       double[] trajectory = TrajectoryHelper.calculateTargetTrajectory(TARGET_HEIGHT, TARGET_DISTANCE, TARGET_ENTRY_ANGLE);
       System.out.println(trajectory[0]);
       System.out.println(trajectory[1]);
+      m_drive.turnToGoal();
       if(m_outtake.go_to_angle(Math.PI/2 - trajectory[0])){
         m_outtake.setAimingVoltage(0);
         m_outtake.shootAtSpeed(trajectory[1]);

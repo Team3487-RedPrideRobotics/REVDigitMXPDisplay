@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -58,6 +59,7 @@ public class Drive extends SubsystemBase {
   private NetworkTableEntry yEntry;
   private NetworkTableEntry xEntry;
   private NetworkTableEntry angleEntry;
+  private Field2d m_field;
 
   /** Creates a new ExampleSubsystem. */
   public Drive() {
@@ -106,6 +108,9 @@ public class Drive extends SubsystemBase {
     rightEncoder.setPositionConversionFactor(Constants.DriveConstants.DRIVE_POSITION_SCALE);
     rightEncoder.setVelocityConversionFactor(Constants.DriveConstants.DRIVE_VELOCITY_SCALE);
 
+    m_field = new Field2d();
+    
+
     // odometry
     gyroscope = new ADXRS450_Gyro();
     gyroscope.calibrate();
@@ -131,7 +136,8 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("Drive Left Position", leftEncoder.getPosition());
     SmartDashboard.putNumber("Drive Right Position", rightEncoder.getPosition());
     SmartDashboard.putNumber("Gyro Angle", gyroAngle.getDegrees());
-
+    m_field.setRobotPose(m_odometry.getEstimatedPosition());
+    SmartDashboard.putData("Field",m_field);
   }
 
   @Override
@@ -142,6 +148,16 @@ public class Drive extends SubsystemBase {
   // methods
   public void zoomZoom(double leftSpeed, double rightSpeed) {
     gonkDrive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  /**
+   * tank drive without input smoothing
+   * @param leftSpeed
+   * @param rightSpeed
+   */
+  public void tankDriveRaw(double leftSpeed, double rightSpeed){
+    leftDrive.set(leftSpeed);
+    rightDrive.set(rightSpeed);
   }
 
   public void resetEncoders() {
@@ -166,5 +182,21 @@ public class Drive extends SubsystemBase {
     System.out.println("Because you guy's don't possess the JEM gene, that's why you're upset, no JEM equals ANGER!");
     rightDrive.set(1);
     leftDrive.set(1);
+  }
+  /**
+   * 
+   * @param angle in degrees
+   */
+  public void turnToAngle(double angle){
+    double delta_angle = angle - m_pose.getRotation().getDegrees();
+    if(Math.abs(delta_angle) >= Constants.DriveEdits.TURN_THRESHOLD){
+      double speed = delta_angle * Constants.DriveEdits.KP_DRIVETRAIN;
+      tankDriveRaw(-speed, speed);
+    }
+
+  }
+
+  public void turnToGoal(){
+    turnToAngle(Math.atan2(Constants.DriveEdits.GOAL_POSE.getX()-m_pose.getX(), Constants.DriveEdits.GOAL_POSE.getY()-m_pose.getY()));
   }
 }

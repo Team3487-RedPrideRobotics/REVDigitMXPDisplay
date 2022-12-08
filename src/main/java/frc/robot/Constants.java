@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -38,9 +41,12 @@ public final class Constants {
     }
 
     public static final class DriveEdits { // Editable Items in Drive.java
+        public static final double TURN_THRESHOLD = 2;
+        public static final double KP_DRIVETRAIN = 0.5;
         public static double DRIVE_SPEED = 1;
         public static boolean LEFT_DRIVE_REVERSE = true;
         public static boolean RIGHT_DRIVE_REVERSE = false;
+        public static Pose2d GOAL_POSE = new Pose2d(-0.23, 0, new Rotation2d(Math.PI));
     }
 
     public static final class OuttakeEdits { // Editable Items in Outtake.java
