@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import org.opencv.core.Mat;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -43,6 +47,7 @@ public final class Constants {
     public static final class DriveEdits { // Editable Items in Drive.java
         public static final double TURN_THRESHOLD = 2;
         public static final double KP_DRIVETRAIN = 0.5;
+        public static final Transform2d VISION_THRESHOLD = new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI/90));
         public static double DRIVE_SPEED = 1;
         public static boolean LEFT_DRIVE_REVERSE = true;
         public static boolean RIGHT_DRIVE_REVERSE = false;

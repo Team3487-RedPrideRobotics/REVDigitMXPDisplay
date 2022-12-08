@@ -14,6 +14,7 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveEdits;
 
 public class Drive extends SubsystemBase {
 
@@ -122,7 +124,11 @@ public class Drive extends SubsystemBase {
     new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01)); // Global measurement standard deviations. X, Y, and theta. 
     yEntry.addListener(event -> {
       Pose2d previous = m_odometry.getEstimatedPosition();
-      m_odometry.addVisionMeasurement(new Pose2d(new Translation2d(xEntry.getDouble(previous.getX()), yEntry.getDouble(previous.getY())), new Rotation2d(angleEntry.getDouble(previous.getRotation().getRadians()))), Timer.getFPGATimestamp());
+      Pose2d visionPose = new Pose2d(new Translation2d(xEntry.getDouble(previous.getX()), yEntry.getDouble(previous.getY())), new Rotation2d(angleEntry.getDouble(previous.getRotation().getRadians())));
+      Transform2d deltaPose = visionPose.minus(previous);
+      if(deltaPose.getX() < DriveEdits.VISION_THRESHOLD.getX() && deltaPose.getY() < DriveEdits.VISION_THRESHOLD.getY() && deltaPose.getRotation().getDegrees() < DriveEdits.VISION_THRESHOLD.getRotation().getDegrees()){
+        m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
+      }
    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
 
