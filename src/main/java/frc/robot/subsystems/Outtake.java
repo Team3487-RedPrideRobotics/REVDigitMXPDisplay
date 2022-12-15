@@ -12,6 +12,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -32,7 +33,7 @@ public class Outtake extends SubsystemBase {
   private RelativeEncoder aim_encoder;
   private double kP_aimer = 1;
   private double aimTheshold = 2*Math.PI/180;
-  private double spin_ratio = 3; //ratio between bottom and top linear speed
+  private double spin_ratio = 1; //ratio between bottom and top linear speed
   private double top_radius = 2d/2d*2.54/100; // radius of top flywheel in meters
   private double bottom_radius = 4d/2d*2.54/100; // radius of bottom flywheel in meters
   private RelativeEncoder top_encoder;
@@ -41,6 +42,7 @@ public class Outtake extends SubsystemBase {
   private SparkMaxPIDController PIDController_bottom;
   private SimpleMotorFeedforward feedforward_top;
   private SimpleMotorFeedforward feedforward_bottom;
+  private NetworkTableEntry ratioEntry;
 
   /** Creates a new ExampleSubsystem. */
   public Outtake() {
@@ -87,6 +89,11 @@ public class Outtake extends SubsystemBase {
     PIDController_bottom.setIZone(OuttakePID.kIz_shooter);
     PIDController_bottom.setFF(OuttakePID.kFF_shooter);
     PIDController_bottom.setOutputRange(OuttakePID.kMinOutput_shooter, OuttakePID.kMaxOutput_shooter);    
+
+    ratioEntry = Shuffleboard.getTab("Teleop").add("Spin Ratio", spin_ratio).getEntry();
+    ratioEntry.addListener(event -> {
+      spin_ratio = ratioEntry.getDouble(spin_ratio);
+   }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
 
   @Override

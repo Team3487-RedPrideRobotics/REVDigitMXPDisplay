@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OuttakeEdits;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -40,6 +42,8 @@ public class TeleopCommand extends CommandBase {
   private NetworkTableEntry intakeBackSpeed;
   private NetworkTableEntry intakeFrontReverse;
   private NetworkTableEntry intakeBackReverse;
+  private NetworkTableEntry outtakeSpeed;
+  private NetworkTableEntry outtakeAngle;
   private int rightReverseDecide = 1;
   private int leftReverseDecide = 1;
   private int topDecide = 1;
@@ -78,6 +82,9 @@ public class TeleopCommand extends CommandBase {
 
     intakeFrontSpeed = Shuffleboard.getTab("Teleop").add("Intake Front or Main Speed", Constants.IntakeEdits.INTAKE_FRONT_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
     intakeBackSpeed = Shuffleboard.getTab("Teleop").add("Intake Back Speed", Constants.IntakeEdits.INTAKE_BACK_SPEED).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("Min",0,"Max",1)).getEntry();
+
+    outtakeSpeed = Shuffleboard.getTab("Teleop").add("Shoot Speed",Constants.OuttakeEdits.SHOOT_SPEED).getEntry();
+    outtakeAngle = Shuffleboard.getTab("Teleop").add("Shoot Angle",Constants.OuttakeEdits.SHOOT_ANGLE).getEntry();
 
     reset_timer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
@@ -148,16 +155,10 @@ public class TeleopCommand extends CommandBase {
 
     // autoaiming and firing
     if(RobotContainer.getInstance().getXInput().getBButton()){
-      double[] trajectory = TrajectoryHelper.calculateTargetTrajectory(TARGET_HEIGHT, m_drive.getGoalDistance(), TARGET_ENTRY_ANGLE);
-      System.out.println(trajectory[0]);
-      System.out.println(trajectory[1]);
-      
-      m_drive.turnToGoal();
-      if(m_outtake.go_to_angle(Math.PI/2 - trajectory[0])){
+      if(m_outtake.go_to_angle(outtakeAngle.getDouble(OuttakeEdits.SHOOT_ANGLE))){
         m_outtake.setAimingVoltage(0);
-        m_outtake.shootAtSpeed(trajectory[1]);
+        m_outtake.shootAtSpeed(outtakeSpeed.getDouble(OuttakeEdits.SHOOT_SPEED));
       }
-      
     }
 
     // shooting ball
