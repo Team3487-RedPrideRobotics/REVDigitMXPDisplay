@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.time.Clock;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
@@ -64,6 +66,7 @@ public class Drive extends SubsystemBase {
   private NetworkTableEntry xEntry;
   private NetworkTableEntry angleEntry;
   private Field2d m_field;
+  private Pose2d startPose;
 
   /** Creates a new ExampleSubsystem. */
   public Drive() {
@@ -75,6 +78,7 @@ public class Drive extends SubsystemBase {
 
       //get a reference to key in "datatable" called "Y"
     yEntry = datatable.getEntry("y");
+    yEntry.setNumber(0);
     xEntry = datatable.getEntry("x");
     angleEntry = datatable.getEntry("angle");
     // sparks for the drive 
@@ -104,12 +108,12 @@ public class Drive extends SubsystemBase {
 
     leftEncoder = leftDrive2.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     leftEncoder.setPosition(0);
-    leftEncoder.setPositionConversionFactor(Constants.DriveConstants.DRIVE_POSITION_SCALE);
+    leftEncoder.setPositionConversionFactor(Constants.DriveConstants.LEFT_DRIVE_POSITION_SCALE);
     leftEncoder.setVelocityConversionFactor(Constants.DriveConstants.DRIVE_VELOCITY_SCALE);
 
     rightEncoder = rightDrive2.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     rightEncoder.setPosition(0);
-    rightEncoder.setPositionConversionFactor(Constants.DriveConstants.DRIVE_POSITION_SCALE);
+    rightEncoder.setPositionConversionFactor(Constants.DriveConstants.RIGHT_DRIVE_POSITION_SCALE);
     rightEncoder.setVelocityConversionFactor(Constants.DriveConstants.DRIVE_VELOCITY_SCALE);
 
     m_field = new Field2d();
@@ -120,6 +124,7 @@ public class Drive extends SubsystemBase {
     gyroscope.calibrate();
     gyroscope.reset();
     m_pose = new Pose2d(Constants.DriveConstants.START_X, Constants.DriveConstants.START_Y, new Rotation2d());
+    startPose = m_pose;
     m_odometry = new DifferentialDrivePoseEstimator(gyroscope.getRotation2d(), m_pose,
     new MatBuilder<>(Nat.N5(), Nat.N1()).fill(0.02, 0.02, 0.01, 0.02, 0.02), // State measurement standard deviations. X, Y, theta.
     new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // Local measurement standard deviations. Left encoder, right encoder, gyro.
@@ -129,7 +134,7 @@ public class Drive extends SubsystemBase {
       Pose2d visionPose = new Pose2d(new Translation2d(xEntry.getDouble(previous.getX()), yEntry.getDouble(previous.getY())), new Rotation2d(angleEntry.getDouble(previous.getRotation().getRadians())));
       Transform2d deltaPose = visionPose.minus(previous);
       if(deltaPose.getX() < DriveEdits.VISION_THRESHOLD.getX() && deltaPose.getY() < DriveEdits.VISION_THRESHOLD.getY() && deltaPose.getRotation().getDegrees() < DriveEdits.VISION_THRESHOLD.getRotation().getDegrees()){
-        m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
+        m_odometry.addVisionMeasurement(visionPose, yEntry.getLastChange());
       }
    }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
@@ -137,15 +142,19 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     var gyroAngle = Rotation2d.fromDegrees(-gyroscope.getAngle());
-    m_pose = m_odometry.update(gyroAngle, new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity()), leftEncoder.getPosition(), rightEncoder.getPosition());
+    m_pose = m_odometry.update(gyroAngle, new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), -rightEncoder.getVelocity()), leftEncoder.getPosition(), -rightEncoder.getPosition());
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Drive Left Speed", leftEncoder.getVelocity()); 
     SmartDashboard.putNumber("Drive Right Speed", rightEncoder.getVelocity()); 
     SmartDashboard.putNumber("Drive Left Position", leftEncoder.getPosition());
     SmartDashboard.putNumber("Drive Right Position", rightEncoder.getPosition());
+    SmartDashboard.putNumber("Left Position inches", leftEncoder.getPosition()*100/2.54);
+    SmartDashboard.putNumber("Right Position inches", rightEncoder.getPosition()*100/2.54);
     SmartDashboard.putNumber("Gyro Angle", gyroAngle.getDegrees());
     m_field.setRobotPose(m_odometry.getEstimatedPosition());
-    SmartDashboard.putData("Field",m_field);
+    SmartDashboard.putNumber("X (in)",m_pose.getX()*100/2.54);
+    SmartDashboard.putNumber("Y (in)", m_pose.getY()*100/2.54);
+    SmartDashboard.putNumber("rotation", m_pose.getRotation().getDegrees());
   }
 
   @Override
@@ -170,6 +179,7 @@ public class Drive extends SubsystemBase {
 
   public void resetEncoders() {
     leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
   }
 
   // funny commands 
@@ -205,10 +215,15 @@ public class Drive extends SubsystemBase {
   }
 
   public void turnToGoal(){
-    turnToAngle(Math.atan2(Constants.DriveEdits.GOAL_POSE.getX()-m_pose.getX(), Constants.DriveEdits.GOAL_POSE.getY()-m_pose.getY()));
+    turnToAngle(Math.atan2(Constants.DriveEdits.GOAL_POSE.getY()-m_pose.getY(), Constants.DriveEdits.GOAL_POSE.getX()-m_pose.getX()));
   }
 
   public double getGoalDistance(){
     return(Math.sqrt(Math.pow(Constants.DriveEdits.GOAL_POSE.getX()-m_pose.getX(), 2)+Math.pow(Constants.DriveEdits.GOAL_POSE.getY()-m_pose.getY(),2)));
+  }
+
+  public void resetPose(){
+    resetEncoders();
+    m_odometry.resetPosition(startPose, gyroscope.getRotation2d());
   }
 }

@@ -90,7 +90,9 @@ public class TeleopCommand extends CommandBase {
   @Override
   public void initialize() {
     m_drive.resetEncoders();
+    m_drive.resetPose();
     m_outtake.resetAimEncoder();
+    reset_timer.reset();
     reset_timer.start();
   }
 
@@ -149,11 +151,13 @@ public class TeleopCommand extends CommandBase {
       double[] trajectory = TrajectoryHelper.calculateTargetTrajectory(TARGET_HEIGHT, m_drive.getGoalDistance(), TARGET_ENTRY_ANGLE);
       System.out.println(trajectory[0]);
       System.out.println(trajectory[1]);
+      
       m_drive.turnToGoal();
       if(m_outtake.go_to_angle(Math.PI/2 - trajectory[0])){
         m_outtake.setAimingVoltage(0);
         m_outtake.shootAtSpeed(trajectory[1]);
       }
+      
     }
 
     // shooting ball

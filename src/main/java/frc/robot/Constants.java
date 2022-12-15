@@ -22,9 +22,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 public final class Constants {
 
     public static final class DriveConstants { // The constants for subsytems/Drive.java
+        public static final double START_Y = 7 * 2.54/100;
         public static final double START_X = 0;
-        public static final double START_Y = 0;
-        public static final double DRIVE_POSITION_SCALE = 1.0/10.5 * (6 * Math.PI) * 2.54/100; // rotations / encoder unit * (wheel diameter in inches * pi) * cm / in * m / cm = meters / encoder unit
+        public static final double LEFT_DRIVE_POSITION_SCALE = 1.0/10.5 * (6 * Math.PI) * 2.54/100; // rotations / encoder unit * (wheel diameter in inches * pi) * cm / in * m / cm = meters / encoder unit
+        public static final double RIGHT_DRIVE_POSITION_SCALE = 1.0/10.5 * (6 * Math.PI) * 2.54/100; // rotations / encoder unit * (wheel diameter in inches * pi) * cm / in * m / cm = meters / encoder unit
         public static final double DRIVE_VELOCITY_SCALE = 1.0 / 60 * (6 * Math.PI) * 2.54/100; // rotations / minute * minutes / second * (wheel diameter in inches * pi) * cm / in * m / cm = meters / second
         public static int[] LEFT_DRIVE_SPARKS = {3, 2};
         public static int[] RIGHT_DRIVE_SPARKS = {0, 1};
@@ -45,8 +46,8 @@ public final class Constants {
     }
 
     public static final class DriveEdits { // Editable Items in Drive.java
-        public static final double TURN_THRESHOLD = 2;
-        public static final double KP_DRIVETRAIN = 0.5;
+        public static final double TURN_THRESHOLD = 5;
+        public static final double KP_DRIVETRAIN = 0.005;
         public static final Transform2d VISION_THRESHOLD = new Transform2d(new Translation2d(1,1), new Rotation2d(Math.PI/90));
         public static double DRIVE_SPEED = 1;
         public static boolean LEFT_DRIVE_REVERSE = true;
