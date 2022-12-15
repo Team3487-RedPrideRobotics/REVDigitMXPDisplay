@@ -56,6 +56,8 @@ public final class Constants {
     }
 
     public static final class OuttakeEdits { // Editable Items in Outtake.java
+        public static final double SHOOT_ANGLE = 0;
+        public static final double SHOOT_SPEED = 0;
         public static double MANIPULATOR_HOLD_MULTIPLIER = 2.15;
         public static boolean SHOOT_TOP_REVERSE = true;
         public static boolean SHOOT_BOTTOM_REVERSE = true;
