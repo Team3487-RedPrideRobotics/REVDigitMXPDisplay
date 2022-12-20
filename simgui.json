@@ -41,11 +41,14 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Display": "Subsystem",
       "/LiveWindow/Drive": "Subsystem",
       "/LiveWindow/Intake": "Subsystem",
       "/LiveWindow/Outtake": "Subsystem",
       "/LiveWindow/Ungrouped/ADXRS450_Gyro[0]": "Gyro",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/DigitalInput[19]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[20]": "Digital Input",
       "/LiveWindow/Ungrouped/MotorControllerGroup[3]": "Motor Controller",
       "/LiveWindow/Ungrouped/MotorControllerGroup[4]": "Motor Controller",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
@@ -60,9 +63,16 @@
       "open": true
     },
     "Shuffleboard": {
-      "Teleop": {
+      "Display": {
         "open": true
-      }
+      },
+      "open": true
+    },
+    "SmartDashboard": {
+      "open": true
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

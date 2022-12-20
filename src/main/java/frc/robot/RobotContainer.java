@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.subsystems.Display;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -26,6 +27,7 @@ public class RobotContainer {
   private final Drive m_drive = new Drive();
   private final Outtake m_outtake = new Outtake();
   private final Intake m_intake = new Intake();
+  private final Display m_display = new Display();
 
   private final XboxController XInput = new XboxController(0);
 
