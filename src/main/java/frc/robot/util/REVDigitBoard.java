@@ -147,6 +147,9 @@ public class REVDigitBoard {
 	public Byte[] toDigitArray(String input){
 		ArrayList<Byte> output = new ArrayList<Byte>();
 		int i = 0;
+		while(input.length() < 4){
+			input.concat(" ");
+		}
 		while(i<4){
 			if(input.charAt(i) == '.'){
 				if(output.size() < 1){
