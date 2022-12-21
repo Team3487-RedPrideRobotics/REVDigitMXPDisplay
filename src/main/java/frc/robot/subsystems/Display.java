@@ -7,6 +7,7 @@ import java.util.List;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.REVDigitBoard;
@@ -30,6 +31,7 @@ public class Display extends SubsystemBase{
     private NetworkTableEntry twoD6Entry;
     private NetworkTableEntry twoD7Entry;    
     private NetworkTableEntry twoD8Entry;
+    private NetworkTableEntry stringEntry;
 
     public Display(){
         displayBoard = new REVDigitBoard();
@@ -49,6 +51,7 @@ public class Display extends SubsystemBase{
         twoD6Entry = Shuffleboard.getTab("Display").add("2D6",false).getEntry();
         twoD7Entry = Shuffleboard.getTab("Display").add("2D7",false).getEntry();
         twoD8Entry = Shuffleboard.getTab("Display").add("2D8",false).getEntry();
+        stringEntry = Shuffleboard.getTab("Display").add("String","3487").getEntry();
     }
 
     @Override
@@ -66,7 +69,7 @@ public class Display extends SubsystemBase{
             first=bytez[0];
             last=bytez[1];
         }
-        displayBoard.displayRaw(first, last);
+        displayBoard.displayText(stringEntry.getString("3487"));
     }
 
     @Override
