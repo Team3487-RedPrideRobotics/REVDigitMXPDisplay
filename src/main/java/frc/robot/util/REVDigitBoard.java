@@ -52,25 +52,25 @@ public class REVDigitBoard {
 		charreg = new byte[37][2]; //charreg is short for character registry
 		charmap = new HashMap<Character, Integer>(); 
 		
-		charreg[0][0] = (byte)0b00111111; charreg[9][1] = (byte)0b00000000; //0
+		charreg[0][0] = (byte)0b11111100; charreg[9][1] = (byte)0b00000000; //0
 		charmap.put('0',0);
-		charreg[1][0] = (byte)0b00000110; charreg[0][1] = (byte)0b00000000; //1
+		charreg[1][0] = (byte)0b01100000; charreg[0][1] = (byte)0b00100000; //1
 		charmap.put('1',1);
 	 	charreg[2][0] = (byte)0b11011011; charreg[1][1] = (byte)0b00000000; //2
 		charmap.put('2',2);
-	 	charreg[3][0] = (byte)0b11001111; charreg[2][1] = (byte)0b00000000; //3
+	 	charreg[3][0] = (byte)0b11110001; charreg[2][1] = (byte)0b00000000; //3
 		charmap.put('3',3);
-	 	charreg[4][0] = (byte)0b11100110; charreg[3][1] = (byte)0b00000000; //4
+	 	charreg[4][0] = (byte)0b01100111; charreg[3][1] = (byte)0b00000000; //4
 		charmap.put('4',4);
-	 	charreg[5][0] = (byte)0b11101101; charreg[4][1] = (byte)0b00000000; //5
+	 	charreg[5][0] = (byte)0b10110111; charreg[4][1] = (byte)0b00000000; //5
 		charmap.put('5',5);
-	 	charreg[6][0] = (byte)0b11111101; charreg[5][1] = (byte)0b00000000; //6
+	 	charreg[6][0] = (byte)0b10111111; charreg[5][1] = (byte)0b00000000; //6
 		charmap.put('6',6);
-	 	charreg[7][0] = (byte)0b00000111; charreg[6][1] = (byte)0b00000000; //7
+	 	charreg[7][0] = (byte)0b10000000; charreg[6][1] = (byte)0b00100100; //7
 		charmap.put('7',7);
 	 	charreg[8][0] = (byte)0b11111111; charreg[7][1] = (byte)0b00000000; //8
 		charmap.put('8',8);
-	 	charreg[9][0] = (byte)0b11101111; charreg[8][1] = (byte)0b00000000; //9
+	 	charreg[9][0] = (byte)0b11100111; charreg[8][1] = (byte)0b00000000; //9
 		charmap.put('9',9);
 
 	 	charreg[10][0] = (byte)0b11110111; charreg[10][1] = (byte)0b00000000; //A
@@ -144,7 +144,7 @@ public class REVDigitBoard {
  		i2c.writeBulk(byte1);
 	}
 
-	public byte[] toDigitArray(String input){
+	public Byte[] toDigitArray(String input){
 		ArrayList<Byte> output = new ArrayList<Byte>();
 		int i = 0;
 		while(i<4){
@@ -158,8 +158,24 @@ public class REVDigitBoard {
 			output.add(charreg[charmap.get(input.charAt(i))][0]);
 			output.add(charreg[charmap.get(input.charAt(i))][1]);
 		}
-		byte[] outputArray = output.toArray(outputArray);
+		Byte[] outputArray = {};
+		outputArray = output.toArray(outputArray);
 		return outputArray;
+	}
+
+	public void displayText(String text){
+		Byte[] bytez = toDigitArray(text);
+		byte[] outputByte = new byte[10];
+		outputByte[0] = (byte)(0b0000111100001111);
+		outputByte[2] = bytez[0];
+		outputByte[3] = bytez[1];
+		outputByte[4] = bytez[2];
+		outputByte[5] = bytez[3];
+		outputByte[6] = bytez[4];
+		outputByte[7] = bytez[5];
+		outputByte[8] = bytez[6];
+		outputByte[9] = bytez[7];
+		i2c.writeBulk(outputByte);
 	}
 	
 	
