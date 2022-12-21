@@ -157,6 +157,7 @@ public class REVDigitBoard {
 			}
 			output.add(charreg[charmap.get(input.charAt(i))][0]);
 			output.add(charreg[charmap.get(input.charAt(i))][1]);
+			i++;
 		}
 		Byte[] outputArray = {};
 		outputArray = output.toArray(outputArray);
