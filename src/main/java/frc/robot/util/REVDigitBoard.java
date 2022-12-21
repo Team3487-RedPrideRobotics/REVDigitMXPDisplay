@@ -150,7 +150,7 @@ public class REVDigitBoard {
 		while(input.length() < 4){
 			input.concat(" ");
 		}
-		while(i<4){
+		while(output.size() < 8){
 			if(input.charAt(i) == '.'){
 				if(output.size() < 1){
 					continue;
