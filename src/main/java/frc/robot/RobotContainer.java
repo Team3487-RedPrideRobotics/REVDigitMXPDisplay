@@ -13,6 +13,7 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,14 +25,14 @@ public class RobotContainer {
 
   private static RobotContainer m_robotContainer = new RobotContainer();  
   // The robot's subsystems and commands are defined here...
-  private final Drive m_drive = new Drive();
-  private final Outtake m_outtake = new Outtake();
-  private final Intake m_intake = new Intake();
+  //private final Drive m_drive = new Drive();
+  //private final Outtake m_outtake = new Outtake();
+  //private final Intake m_intake = new Intake();
   private final Display m_display = new Display();
 
   private final XboxController XInput = new XboxController(0);
 
-  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drive, m_outtake, m_intake);
+  //private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drive, m_outtake, m_intake);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -67,7 +68,7 @@ public class RobotContainer {
   }
 
   public Command getTeleopCommand(){
-    return m_teleopCommand;
+    return new WaitCommand(1);
   }
 
   // copy-ith the evergreen joystick input code (I'm lazy)

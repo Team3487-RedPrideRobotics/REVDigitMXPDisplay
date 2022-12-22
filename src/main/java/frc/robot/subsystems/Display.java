@@ -69,7 +69,7 @@ public class Display extends SubsystemBase{
             first=bytez[0];
             last=bytez[1];
         }
-        displayBoard.displayText("3487.");
+        displayBoard.displayText("5678.");
     }
 
     @Override

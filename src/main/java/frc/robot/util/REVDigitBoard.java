@@ -53,25 +53,25 @@ public class REVDigitBoard {
 		charreg = new byte[37][2]; //charreg is short for character registry
 		charmap = new HashMap<Character, Integer>(); 
 		
-		charreg[0][0] = (byte)0b00111111; charreg[9][1] = (byte)0b00000000; //0
+		charreg[0][0] = (byte)0b00111111; charreg[0][1] = (byte)0b00000000; //0
 		charmap.put('0',0);
-		charreg[1][0] = (byte)0b00000110; charreg[0][1] = (byte)0b00000100; //1
+		charreg[1][0] = (byte)0b00000110; charreg[1][1] = (byte)0b00000100; //1
 		charmap.put('1',1);
-	 	charreg[2][0] = (byte)0b11011011; charreg[1][1] = (byte)0b00000000; //2
+	 	charreg[2][0] = (byte)0b11011011; charreg[2][1] = (byte)0b00000000; //2
 		charmap.put('2',2);
-	 	charreg[3][0] = (byte)0b10001111; charreg[2][1] = (byte)0b00000000; //3
+	 	charreg[3][0] = (byte)0b10001111; charreg[3][1] = (byte)0b00000000; //3
 		charmap.put('3',3);
-	 	charreg[4][0] = (byte)0b11100110; charreg[3][1] = (byte)0b00000000; //4
+	 	charreg[4][0] = (byte)0b11100110; charreg[4][1] = (byte)0b00000000; //4
 		charmap.put('4',4);
-	 	charreg[5][0] = (byte)0b11101101; charreg[4][1] = (byte)0b00000000; //5
+	 	charreg[5][0] = (byte)0b11101101; charreg[5][1] = (byte)0b00000000; //5
 		charmap.put('5',5);
-	 	charreg[6][0] = (byte)0b11111101; charreg[5][1] = (byte)0b00000000; //6
+	 	charreg[6][0] = (byte)0b11111101; charreg[6][1] = (byte)0b00000000; //6
 		charmap.put('6',6);
-	 	charreg[7][0] = (byte)0b00000001; charreg[6][1] = (byte)0b00100100; //7
+	 	charreg[7][0] = (byte)0b00000001; charreg[7][1] = (byte)0b00100100; //7
 		charmap.put('7',7);
-	 	charreg[8][0] = (byte)0b11111111; charreg[7][1] = (byte)0b00000000; //8
+	 	charreg[8][0] = (byte)0b11111111; charreg[8][1] = (byte)0b00000000; //8
 		charmap.put('8',8);
-	 	charreg[9][0] = (byte)0b11100111; charreg[8][1] = (byte)0b00000000; //9
+	 	charreg[9][0] = (byte)0b11100111; charreg[9][1] = (byte)0b00000000; //9
 		charmap.put('9',9);
 
 	 	charreg[10][0] = (byte)0b11110111; charreg[10][1] = (byte)0b00000000; //A
