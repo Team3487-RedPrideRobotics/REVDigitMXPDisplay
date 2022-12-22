@@ -1,15 +1,19 @@
 package frc.robot.subsystems;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.util.REVDigitBoard;
 
 public class Display extends SubsystemBase{
@@ -32,6 +36,9 @@ public class Display extends SubsystemBase{
     private NetworkTableEntry twoD7Entry;    
     private NetworkTableEntry twoD8Entry;
     private NetworkTableEntry stringEntry;
+    private String state;
+    private boolean AButtonReleased;
+    DecimalFormat df_obj;
 
     public Display(){
         displayBoard = new REVDigitBoard();
@@ -52,34 +59,51 @@ public class Display extends SubsystemBase{
         twoD7Entry = Shuffleboard.getTab("Display").add("2D7",false).getEntry();
         twoD8Entry = Shuffleboard.getTab("Display").add("2D8",false).getEntry();
         stringEntry = Shuffleboard.getTab("Display").add("String","3487").getEntry();
+        state = "idle";
+        AButtonReleased = true;
+        df_obj = new DecimalFormat("#.##");
+        displayBoard.clear();
     }
 
     @Override
     public void periodic(){
-        byte[] bytez = getNetworkBytes();
-        byte first;
-        byte last;
-        if(bytez.length == 0){
-            first=(byte)0b00000000;
-            last=(byte)0b00000000;
-        }else if(bytez.length == 1){
-            first=bytez[0];
-            last=(byte)0b00000000;
-        }else{
-            first=bytez[0];
-            last=bytez[1];
+        displayBoard.displayText("HELP");
+    }
+
+    private void battery() {
+        double voltage = RobotController.getBatteryVoltage();
+        displayBoard.displayText(df_obj.format(voltage).concat("V"));
+        
+    }
+
+    private void infoLoop(){
+        if(state=="idle"){
+            if(getAButtonPressed()){
+                state="battery";
+            }
+            idle();
+        }else if(state=="battery"){
+            if(getAButtonPressed()){
+                state="idle";
+            }
+            battery();
         }
-        displayBoard.displayText("5678.");
     }
 
     @Override
     public void simulationPeriodic(){
-
+        
     }
 
-    public void displayVoltage(){
-        double voltage = RobotController.getBatteryVoltage();
-        
+    public boolean getAButtonPressed(){
+        if(!displayBoard.getButtonA() && AButtonReleased){
+            AButtonReleased = false;
+            return true;
+        }
+        if(!AButtonReleased){
+            AButtonReleased = displayBoard.getButtonA();
+        }
+        return false;
     }
 
     public byte[] getNetworkBytes(){
@@ -113,5 +137,23 @@ public class Display extends SubsystemBase{
         SmartDashboard.putRaw("Thingy", m_bitArray.toByteArray());
 
         return m_bitArray.toByteArray();
+    }
+    private void idle(){
+        displayBoard.displayText("   3");
+        Timer.delay(0.2);
+        displayBoard.displayText("  34");
+        Timer.delay(0.2);
+        displayBoard.displayText(" 348");
+        Timer.delay(0.2);
+        displayBoard.displayText("3487");
+        Timer.delay(0.2);
+        displayBoard.displayText("487 ");
+        Timer.delay(0.2);
+        displayBoard.displayText("87  ");
+        Timer.delay(0.2);
+        displayBoard.displayText("7   ");
+        Timer.delay(0.2);
+        displayBoard.displayText("    ");
+        Timer.delay(1);
     }
 }
