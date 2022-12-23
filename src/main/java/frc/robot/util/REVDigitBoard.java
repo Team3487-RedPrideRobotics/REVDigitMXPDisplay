@@ -130,6 +130,42 @@ public class REVDigitBoard {
 		charmap.put('Z',35);
 		charreg[36][0] = (byte)0b00000000; charreg[36][1] = (byte)0b00000000; //space
 		charmap.put(' ',36);
+		charreg[37][0] = (byte)0b11011011; charreg[37][1] = (byte)0b00010010; //$
+		charmap.put('$',37);
+		charreg[38][0] = (byte)0b00000000; charreg[38][1] = (byte)0b00000010; //apostrophe
+		charmap.put('\'',38);
+		charreg[39][0] = (byte)0b00111001; charreg[39][1] = (byte)0b00000000; //[
+		charmap.put('[',39);
+		charreg[40][0] = (byte)0b00001111; charreg[40][1] = (byte)0b00000000; //]
+		charmap.put(']',40);
+		charreg[41][0] = (byte)0b00000000; charreg[41][1] = (byte)0b00111111; //star
+		charmap.put('*',41);
+		charreg[42][0] = (byte)0b11000000; charreg[42][1] = (byte)0b00010010; //plus
+		charmap.put('+',42);
+		charreg[43][0] = (byte)0b00000000; charreg[43][1] = (byte)0b00100000; //comma
+		charmap.put(',',43);
+		charreg[44][0] = (byte)0b11000000; charreg[44][1] = (byte)0b00000000; //minus
+		charmap.put('-',44);
+		charreg[45][0] = (byte)0b00000000; charreg[45][1] = (byte)0b00100100; //slash
+		charmap.put('/',45);
+		charreg[46][0] = (byte)0b00000000; charreg[46][1] = (byte)0b00010010; //pipe
+		charmap.put('|',46);
+		charreg[47][0] = (byte)0b00000000; charreg[47][1] = (byte)0b00001100; //less than
+		charmap.put('<',47);
+		charreg[48][0] = (byte)0b00000000; charreg[48][1] = (byte)0b00100001; //Greater than
+		charmap.put('>',48);
+		charreg[49][0] = (byte)0b11001000; charreg[49][1] = (byte)0b00000000; //Equals
+		charmap.put('=',49);
+		charreg[50][0] = (byte)0b00000000; charreg[50][1] = (byte)0b00001001; //Backslash
+		charmap.put('\\',50);
+		charreg[51][0] = (byte)0b00001000; charreg[51][1] = (byte)0b00000000; //Underscore
+		charmap.put('_',51);
+		charreg[52][0] = (byte)0b00000000; charreg[52][1] = (byte)0b00000001; // ` <- this thingy
+		charmap.put('`',52);
+		charreg[53][0] = (byte)0b11011111; charreg[53][1] = (byte)0b00000000; // a
+		charmap.put('a',53);
+		charreg[54][0] = (byte)0b10001110; charreg[54][1] = (byte)0b00100000; // d
+		charmap.put('d',54);
 	}
 
 	public void displayRaw(byte first, byte last){
