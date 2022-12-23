@@ -39,6 +39,7 @@ public class Display extends SubsystemBase{
     private String state;
     private boolean AButtonReleased;
     DecimalFormat df_obj;
+    private Timer idleTimer;
 
     public Display(){
         displayBoard = new REVDigitBoard();
@@ -61,13 +62,15 @@ public class Display extends SubsystemBase{
         stringEntry = Shuffleboard.getTab("Display").add("String","3487").getEntry();
         state = "idle";
         AButtonReleased = true;
-        df_obj = new DecimalFormat("#.##");
+        df_obj = new DecimalFormat("##.0");
         displayBoard.clear();
+        idleTimer = new Timer();
+        idleTimer.start();
     }
 
     @Override
     public void periodic(){
-        displayBoard.displayText("HELP");
+        infoLoop();
     }
 
     private void battery() {
@@ -100,9 +103,7 @@ public class Display extends SubsystemBase{
             AButtonReleased = false;
             return true;
         }
-        if(!AButtonReleased){
-            AButtonReleased = displayBoard.getButtonA();
-        }
+        AButtonReleased = displayBoard.getButtonA();
         return false;
     }
 
@@ -139,21 +140,40 @@ public class Display extends SubsystemBase{
         return m_bitArray.toByteArray();
     }
     private void idle(){
-        displayBoard.displayText("   3");
-        Timer.delay(0.2);
-        displayBoard.displayText("  34");
-        Timer.delay(0.2);
-        displayBoard.displayText(" 348");
-        Timer.delay(0.2);
-        displayBoard.displayText("3487");
-        Timer.delay(0.2);
-        displayBoard.displayText("487 ");
-        Timer.delay(0.2);
-        displayBoard.displayText("87  ");
-        Timer.delay(0.2);
-        displayBoard.displayText("7   ");
-        Timer.delay(0.2);
-        displayBoard.displayText("    ");
-        Timer.delay(1);
+        if(idleTimer.get() < 0.2){
+            displayBoard.displayText("   3");
+            return;
+        }
+        if(idleTimer.get() < 0.4){
+            displayBoard.displayText("  34");
+            return;
+        }
+        if(idleTimer.get() < 0.6){
+            displayBoard.displayText(" 348");
+            return;
+        }
+        if(idleTimer.get() < 0.8){
+            displayBoard.displayText("3487");
+            return;
+        }
+        if(idleTimer.get() < 1){
+            displayBoard.displayText("487 ");
+            return;
+        }
+        if(idleTimer.get() < 1.2){
+            displayBoard.displayText("87  ");
+            return;
+        }
+        if(idleTimer.get() < 1.4){
+            displayBoard.displayText("7   ");
+            return;
+        }
+        if(idleTimer.get() < 1.6){
+            displayBoard.displayText("    ");
+            return;
+        }
+        if(idleTimer.get() > 2.6){
+            idleTimer.reset();
+        }
     }
 }
