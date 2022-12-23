@@ -166,6 +166,58 @@ public class REVDigitBoard {
 		charmap.put('a',53);
 		charreg[54][0] = (byte)0b10001110; charreg[54][1] = (byte)0b00100000; // d
 		charmap.put('d',54);
+		charreg[55][0] = (byte)0b01111000; charreg[55][1] = (byte)0b00001000; // b
+		charmap.put('b',55);
+		charreg[56][0] = (byte)0b11011000; charreg[56][1] = (byte)0b00000000; // c
+		charmap.put('c',56);
+		charreg[57][0] = (byte)0b01111001; charreg[57][1] = (byte)0b00000000; // e
+		charmap.put('e',57);
+		charreg[58][0] = (byte)0b01110001; charreg[58][1] = (byte)0b00000000; // f
+		charmap.put('f',58);
+		charreg[59][0] = (byte)0b10001111; charreg[59][1] = (byte)0b00000001; // g
+		charmap.put('g',59);
+		charreg[60][0] = (byte)0b11110100; charreg[60][1] = (byte)0b00000000; // h
+		charmap.put('h',60);
+		charreg[61][0] = (byte)0b00000000; charreg[61][1] = (byte)0b00010000; // i
+		charmap.put('i',61);
+		charreg[62][0] = (byte)0b00001110; charreg[62][1] = (byte)0b00000000; // j
+		charmap.put('j',62);
+		charreg[63][0] = (byte)0b00000000; charreg[63][1] = (byte)0b00011110; // k
+		charmap.put('k',63);
+		charreg[64][0] = (byte)0b00000000; charreg[64][1] = (byte)0b00010010; // l
+		charmap.put('l',64);
+		charreg[65][0] = (byte)0b11010100; charreg[65][1] = (byte)0b00010000; // m
+		charmap.put('m',65);
+		charreg[66][0] = (byte)0b01010000; charreg[66][1] = (byte)0b00001000; // n
+		charmap.put('n',66);
+		charreg[67][0] = (byte)0b11011100; charreg[67][1] = (byte)0b00000000; // o
+		charmap.put('o',67);
+		charreg[68][0] = (byte)0b01110001; charreg[68][1] = (byte)0b00000100; // p
+		charmap.put('p',68);
+		charreg[69][0] = (byte)0b11100011; charreg[69][1] = (byte)0b00001000; // q
+		charmap.put('q',69);
+		charreg[70][0] = (byte)0b01010000; charreg[70][1] = (byte)0b00000000; // r
+		charmap.put('r',70);
+		charreg[71][0] = (byte)0b10001101; charreg[71][1] = (byte)0b00000001; // s
+		charmap.put('s',71);
+		charreg[72][0] = (byte)0b01111000; charreg[72][1] = (byte)0b00000000; // t
+		charmap.put('t',72);
+		charreg[73][0] = (byte)0b00011100; charreg[73][1] = (byte)0b00000000; // u
+		charmap.put('u',73);
+		charreg[74][0] = (byte)0b00010000; charreg[74][1] = (byte)0b00100000; // v
+		charmap.put('v',74);
+		charreg[75][0] = (byte)0b00010100; charreg[75][1] = (byte)0b00101000; // w
+		charmap.put('w',75);
+		charreg[76][0] = (byte)0b00000000; charreg[76][1] = (byte)0b00101101; // x
+		charmap.put('x',76);
+		charreg[77][0] = (byte)0b10000111; charreg[77][1] = (byte)0b00000010; // y
+		charmap.put('y',77);
+		charreg[78][0] = (byte)0b00001001; charreg[78][1] = (byte)0b00100100; // z
+		charmap.put('z',78);
+		charreg[79][0] = (byte)0b00000000; charreg[79][1] = (byte)0b00010010; // colon
+		charmap.put(':',79);
+		charreg[80][0] = (byte)0b00100010; charreg[80][1] = (byte)0b00000000; // double quote
+		charmap.put('"',80);
 	}
 
 	public void displayRaw(byte first, byte last){
@@ -186,7 +238,6 @@ public class REVDigitBoard {
 	public Byte[] toDigitArray(String input){
 		ArrayList<Byte> output = new ArrayList<Byte>();
 		int i = 0;
-		input = input.toUpperCase();
 		while(input.length() < 5){
 			input = input.concat(" ");
 		}
