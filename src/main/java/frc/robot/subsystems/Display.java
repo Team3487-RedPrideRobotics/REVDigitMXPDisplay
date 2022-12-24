@@ -7,18 +7,18 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.REVDigitBoard;
+import frc.robot.util.REVDigitMXPDisplay;
 
 public class Display extends SubsystemBase{
 
-    private REVDigitBoard displayBoard;
+    private REVDigitMXPDisplay displayBoard;
     private NetworkTableEntry stringEntry;
     private String state;
     DecimalFormat df_obj;
     private Timer idleTimer;
 
     public Display(){
-        displayBoard = new REVDigitBoard();
+        displayBoard = new REVDigitMXPDisplay();
         stringEntry = Shuffleboard.getTab("Display").add("String","3487").getEntry();
         state = "idle";
         df_obj = new DecimalFormat("##.0");
