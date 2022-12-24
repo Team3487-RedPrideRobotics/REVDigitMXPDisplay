@@ -387,7 +387,7 @@ public class REVDigitMXPDisplay {
 	}
 
 	/**
-	 * {@code format} defaults to a DecimalFormat with pattern string "##.0V"
+	 * {@code format} defaults to a DecimalFormat with pattern string {@code "##.0V"}
 	 * 
 	 * @see #displayBattery(DecimalFormat)
 	 */
