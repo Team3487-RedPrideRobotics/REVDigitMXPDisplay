@@ -10,7 +10,7 @@ Note that only one MXP Display can be controlled per robot. Becuase only one dis
 | Shuffleboard indicator | not started | N/A |
 | More ASCII Characters | not started | N/A |
 | Built-in Battery display function & animations | in progress | Code for battery display and sliding text animation in example.|
-| Gradle packaging| not started | N/A|
+| Gradle packaging| finished | N/A|
  # Acknowledgements
 Adapted from [Vampjaz's Bindings](https://github.com/vampjaz/REVDigitBoard)
 
