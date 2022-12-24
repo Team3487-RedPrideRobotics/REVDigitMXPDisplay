@@ -1,24 +1,21 @@
 package org.usfirst.frc.team3487;
-
+ 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogInput;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 /**
  * Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
- * Note that only one MXP Display can be controlled per robot.
- * Becuase only one display can be active at a time, this class is provided as a singleton.
- * @author silicasandwhich
- * @since 0.1.0
- * @version 0.1.0
+ * Note that only one MXP Display can be controlled per robot
  */
 public class REVDigitMXPDisplay {
 
-	private static REVDigitMXPDisplay m_display = new REVDigitMXPDisplay();
+	public static REVDigitMXPDisplay m_display = new REVDigitMXPDisplay();
 	
 	I2C i2c;
 	DigitalInput buttonA, buttonB;
@@ -28,6 +25,13 @@ public class REVDigitMXPDisplay {
 	HashMap<Character, Integer> charmap;
 	private boolean AButtonReleased;
 	private boolean BButtonReleased;
+	private Timer scrollTimer;
+
+	private int scrollMarker;
+
+	private int scrollOffset;
+
+	private int scrollOffset2;
 	
 	private REVDigitMXPDisplay() {
 		i2c = new I2C(Port.kMXP, 0x70);
@@ -37,6 +41,12 @@ public class REVDigitMXPDisplay {
 
 		AButtonReleased = true;
 		BButtonReleased = true;
+
+		scrollTimer = new Timer();
+		scrollTimer.start();
+		scrollMarker = 0;
+		scrollOffset = 0;
+		scrollOffset2 = 0;
 		
 		byte[] osc = new byte[1];
 	 	byte[] blink = new byte[1];
@@ -234,7 +244,7 @@ public class REVDigitMXPDisplay {
 
 	/**
 	 * 
-	 * @return Singleton of the REV Display.
+	 * @return singleton of the REV Display
 	 */
 	public static REVDigitMXPDisplay getInstance(){
 		return m_display;
@@ -242,11 +252,11 @@ public class REVDigitMXPDisplay {
 
 	
 	/**
-	 * Writes string to the display board.
-	 * @param text The text to be written.
+	 * Writes string to the display board
+	 * @param text the text to be written.
 	 * Characters after the fourth (excluding periods) will be ignored, as will periods placed before the first occurence of a non-period character.
 	 * Strings with less than four non-period character will be padded with spaces to the right.
-	 * @param debug Will print out the string to be displayed if true.
+	 * @param debug will print out the string to be displayed if true
 	 */
 	public void displayText(String text, Boolean debug){
 		String outputString = "";
@@ -321,38 +331,72 @@ public class REVDigitMXPDisplay {
 	public void displayText(String text){
 		displayText(text, false);
 	}
-	
 	/**
-	 * Clears display text
+	 * Sets string to scroll across display (should be called every loop of robot program)
+	 * @param text The text to be written. Text will be processed similarly to { @link displayText(String text) }.
+	 * @param delay Delay between character movements in seconds
+	 * @param debug will print out the string to be displayed if true
 	 */
+	public void displayScrollText(String text, double delay, boolean debug){
+		String finaltext = "    ".concat(text).concat("     ");
+		if(scrollMarker+scrollOffset > finaltext.length()-5){
+			if(scrollTimer.get() > finaltext.length() * delay){
+				scrollMarker = 0;
+				scrollOffset = 0;
+				scrollOffset2 = 0;
+				scrollTimer.reset();
+			}
+			return;
+		}
+		// "    3.4.8.7     "
+		if(scrollTimer.get() > delay * scrollMarker){
+			if(finaltext.charAt(scrollMarker+scrollOffset2) == '.'){
+				scrollOffset2 ++;
+			}
+			String toDisplay = finaltext.substring(scrollMarker+scrollOffset2, scrollMarker+4+scrollOffset);
+			if(finaltext.charAt(scrollMarker+4+scrollOffset) == '.'){
+				toDisplay = toDisplay.concat(".");
+				scrollOffset++;
+			}
+			displayText(toDisplay, true);
+			scrollMarker++;
+		}
+		clear();
+	}
+
+	public void displayScrollText(String text, double delay){
+		displayScrollText(text, delay, false);
+	}
+	
+	
 	public void clear() {
 		 displayText("    ");
 	 }
 	 /**
-	  * Gets value of button A's DigitalInput.
-	  * @return True if button is released, false if button is held.
+	  * 
+	  * @return true if button is released, false if button is held
 	  */
 	public boolean getButtonA() {
 		 return buttonA.get();
 	 }
 	 /**
-	  * Gets value of button B's DigitalInput.
-	  * @return True if button is released, false is button is held.
+	  * 
+	  * @return true if button is released, false is button is held
 	  */
 	public boolean getButtonB() {
 		 return buttonB.get();
 	 }
 	/**
-	 * Gets value of the potentiometer.
-	 * @return Voltage of the potentiometer.
+	 * 
+	 * @return voltage running through potentiometer
 	 */
 	public double getPot() {
 		 return pot.getVoltage();
 	 }
 
 	 /**
-	 * Gets value of button A once per press.
-	 * @return True the first function call that the A button is pressed for.
+	 * 
+	 * @return true the first function call that the a button is pressed for
 	 */
 	 public boolean getAButtonPressed(){
         if(!getButtonA() && AButtonReleased){
@@ -364,8 +408,8 @@ public class REVDigitMXPDisplay {
     }
 
 	/**
-	 * Gets value of button B once per press.
-	 * @return True the first function call that the B button is pressed for.
+	 * 
+	 * @return true the first function call that the b button is pressed for
 	 */
 	public boolean getBButtonPressed(){
         if(!getButtonB() && BButtonReleased){
@@ -385,5 +429,15 @@ public class REVDigitMXPDisplay {
 		firstBitSet.or(secondBitSet);
 		return firstBitSet.toByteArray()[0];
 
+	}
+
+	private int countPeriods(String text){
+		int count = 0;
+		for(int i=0;i<text.length();i++){
+			if(text.charAt(i) == '.'){
+				count++;
+			}
+		}
+		return count;
 	}
 }

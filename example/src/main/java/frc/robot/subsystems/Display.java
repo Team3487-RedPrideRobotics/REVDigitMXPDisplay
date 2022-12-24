@@ -83,48 +83,14 @@ public class Display extends SubsystemBase{
         return displayBoard.getBButtonPressed();
     }
     public void idle(boolean debug){
-        if(idleTimer.get() < 0.2){
-            displayBoard.displayText("   3",debug);
-            return;
-        }
-        if(idleTimer.get() < 0.4){
-            displayBoard.displayText("  34",debug);
-            return;
-        }
-        if(idleTimer.get() < 0.6){
-            displayBoard.displayText(" 348",debug);
-            return;
-        }
-        if(idleTimer.get() < 0.8){
-            displayBoard.displayText("3487",debug);
-            return;
-        }
-        if(idleTimer.get() < 1){
-            displayBoard.displayText("487 ",debug);
-            return;
-        }
-        if(idleTimer.get() < 1.2){
-            displayBoard.displayText("87  ",debug);
-            return;
-        }
-        if(idleTimer.get() < 1.4){
-            displayBoard.displayText("7   ",debug);
-            return;
-        }
-        if(idleTimer.get() < 1.6){
-            displayBoard.displayText("    ",debug);
-            return;
-        }
-        if(idleTimer.get() > 2.6){
-            idleTimer.reset();
-        }
+        displayBoard.displayScrollText("3487", 0.2, debug);
     }
 
     public void idle(){
         idle(false);
     }
     public void customDisplay(Boolean debug){
-        displayBoard.displayText(stringEntry.getString("3487"),debug);
+        displayBoard.displayScrollText(stringEntry.getString("3487"), 0.2, true);
     }
     public void customDisplay(){
         customDisplay(false);
