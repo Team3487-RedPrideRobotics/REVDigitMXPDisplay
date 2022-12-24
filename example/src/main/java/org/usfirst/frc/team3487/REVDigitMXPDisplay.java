@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class REVDigitMXPDisplay {
 
-	public static REVDigitMXPDisplay m_display = new REVDigitMXPDisplay();
+	private static REVDigitMXPDisplay m_display = new REVDigitMXPDisplay();
 	
 	I2C i2c;
 	DigitalInput buttonA, buttonB;
