@@ -1,13 +1,16 @@
 package org.usfirst.frc.team3487;
  
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.AnalogInput;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
 
-import java.time.OffsetDateTime;
-import java.util.*;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
@@ -32,6 +35,10 @@ public class REVDigitMXPDisplay {
 	private int scrollOffset;
 
 	private int scrollOffset2;
+
+	private DecimalFormat batteryDTF;
+
+	private boolean debug;
 	
 	private REVDigitMXPDisplay() {
 		i2c = new I2C(Port.kMXP, 0x70);
@@ -47,6 +54,8 @@ public class REVDigitMXPDisplay {
 		scrollMarker = 0;
 		scrollOffset = 0;
 		scrollOffset2 = 0;
+
+		batteryDTF = new DecimalFormat("##.0V");
 		
 		byte[] osc = new byte[1];
 	 	byte[] blink = new byte[1];
@@ -243,6 +252,23 @@ public class REVDigitMXPDisplay {
 	}	
 
 	/**
+	 * Get whether or not the MXP Display is in debug mode. While in debug mode, the string to be displayed will be printed out alongside being displayed.
+	 * @return debug mode state
+	 */
+	public boolean getDebug() {
+        return debug;
+    }
+
+
+	/**
+	 * Set whether or not the MXP Display is in debug mode. While in debug mode, the string to be displayed will be printed out alongside being displayed.
+	 * @param debug desired debug mode state
+	 */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    /**
 	 * 
 	 * @return singleton of the REV Display
 	 */
@@ -256,9 +282,9 @@ public class REVDigitMXPDisplay {
 	 * @param text the text to be written.
 	 * Characters after the fourth (excluding periods) will be ignored, as will periods placed before the first occurence of a non-period character.
 	 * Strings with less than four non-period character will be padded with spaces to the right.
-	 * @param debug will print out the string to be displayed if true
+	 * 
 	 */
-	public void displayText(String text, Boolean debug){
+	public void displayText(String text){
 		String outputString = "";
 		ArrayList<Byte> output = new ArrayList<Byte>();
 		int i = 0; // index of string, used to iterate each individual character.
@@ -321,23 +347,13 @@ public class REVDigitMXPDisplay {
 			System.out.println(outputString);
 		}
 	}
-
-	/**
-	 * Writes string to the display board
-	 * @param text the text to be written.
-	 * Characters after the fourth (excluding periods) will be ignored, as will periods placed before the first occurence of a non-period character.
-	 * Strings with less than four non-period character will be padded with spaces to the right.
-	 */
-	public void displayText(String text){
-		displayText(text, false);
-	}
 	/**
 	 * Sets string to scroll across display (should be called every loop of robot program)
 	 * @param text The text to be written. Text will be processed similarly to { @link displayText(String text) }.
 	 * @param delay Delay between character movements in seconds
 	 * @param debug will print out the string to be displayed if true
 	 */
-	public void displayScrollText(String text, double delay, boolean debug){
+	public void displayScrollText(String text, double delay){
 		String finaltext = "    ".concat(text).concat("     ");
 		if(scrollMarker+scrollOffset > finaltext.length()-5){
 			if(scrollTimer.get() > finaltext.length() * delay){
@@ -345,10 +361,10 @@ public class REVDigitMXPDisplay {
 				scrollOffset = 0;
 				scrollOffset2 = 0;
 				scrollTimer.reset();
+				clear();
 			}
 			return;
 		}
-		// "    3.4.8.7     "
 		if(scrollTimer.get() > delay * scrollMarker){
 			if(finaltext.charAt(scrollMarker+scrollOffset2) == '.'){
 				scrollOffset2 ++;
@@ -358,14 +374,26 @@ public class REVDigitMXPDisplay {
 				toDisplay = toDisplay.concat(".");
 				scrollOffset++;
 			}
-			displayText(toDisplay, true);
+			displayText(toDisplay);
 			scrollMarker++;
 		}
-		clear();
 	}
 
-	public void displayScrollText(String text, double delay){
-		displayScrollText(text, delay, false);
+	/**
+	 * Displays current battery voltage.
+	 * @param format DecimalFormat to display voltage with
+	 */
+	public void displayBattery(DecimalFormat format){
+		displayText(format.format(RobotController.getBatteryVoltage()));
+	}
+
+	/**
+	 * {@code format} defaults to a DecimalFormat with pattern string "##.0V"
+	 * 
+	 * @see #displayBattery(DecimalFormat)
+	 */
+	public void displayBattery(){
+		displayText(batteryDTF.format(RobotController.getBatteryVoltage()));
 	}
 	
 	
@@ -429,15 +457,5 @@ public class REVDigitMXPDisplay {
 		firstBitSet.or(secondBitSet);
 		return firstBitSet.toByteArray()[0];
 
-	}
-
-	private int countPeriods(String text){
-		int count = 0;
-		for(int i=0;i<text.length();i++){
-			if(text.charAt(i) == '.'){
-				count++;
-			}
-		}
-		return count;
 	}
 }
