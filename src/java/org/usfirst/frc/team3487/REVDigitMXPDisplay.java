@@ -10,11 +10,15 @@ import java.util.*;
 
 /**
  * Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
- * Note that only one MXP Display can be controlled per robot
+ * Note that only one MXP Display can be controlled per robot.
+ * Becuase only one display can be active at a time, this class is provided as a singleton.
+ * @author silicasandwhich
+ * @since 0.1.0
+ * @version 0.1.0
  */
 public class REVDigitMXPDisplay {
 
-	public static REVDigitMXPDisplay m_display = new REVDigitMXPDisplay();
+	private static REVDigitMXPDisplay m_display = new REVDigitMXPDisplay();
 	
 	I2C i2c;
 	DigitalInput buttonA, buttonB;
@@ -230,7 +234,7 @@ public class REVDigitMXPDisplay {
 
 	/**
 	 * 
-	 * @return singleton of the REV Display
+	 * @return Singleton of the REV Display.
 	 */
 	public static REVDigitMXPDisplay getInstance(){
 		return m_display;
@@ -238,11 +242,11 @@ public class REVDigitMXPDisplay {
 
 	
 	/**
-	 * Writes string to the display board
-	 * @param text the text to be written.
+	 * Writes string to the display board.
+	 * @param text The text to be written.
 	 * Characters after the fourth (excluding periods) will be ignored, as will periods placed before the first occurence of a non-period character.
 	 * Strings with less than four non-period character will be padded with spaces to the right.
-	 * @param debug will print out the string to be displayed if true
+	 * @param debug Will print out the string to be displayed if true.
 	 */
 	public void displayText(String text, Boolean debug){
 		String outputString = "";
@@ -325,30 +329,30 @@ public class REVDigitMXPDisplay {
 		 displayText("    ");
 	 }
 	 /**
-	  * gets value of button a digital input
-	  * @return true if button is released, false if button is held
+	  * Gets value of button A's DigitalInput.
+	  * @return True if button is released, false if button is held.
 	  */
 	public boolean getButtonA() {
 		 return buttonA.get();
 	 }
 	 /**
-	  * gets value of button b digital input
-	  * @return true if button is released, false is button is held
+	  * Gets value of button B's DigitalInput.
+	  * @return True if button is released, false is button is held.
 	  */
 	public boolean getButtonB() {
 		 return buttonB.get();
 	 }
 	/**
-	 * gets value of potentiometer
-	 * @return voltage running through potentiometer
+	 * Gets value of the potentiometer.
+	 * @return Voltage of the potentiometer.
 	 */
 	public double getPot() {
 		 return pot.getVoltage();
 	 }
 
 	 /**
-	 * gets value of a button once per press
-	 * @return true the first function call that the a button is pressed for
+	 * Gets value of button A once per press.
+	 * @return True the first function call that the A button is pressed for.
 	 */
 	 public boolean getAButtonPressed(){
         if(!getButtonA() && AButtonReleased){
@@ -360,8 +364,8 @@ public class REVDigitMXPDisplay {
     }
 
 	/**
-	 * gets value of b button once per press
-	 * @return true the first function call that the b button is pressed for
+	 * Gets value of button B once per press.
+	 * @return True the first function call that the B button is pressed for.
 	 */
 	public boolean getBButtonPressed(){
         if(!getButtonB() && BButtonReleased){
