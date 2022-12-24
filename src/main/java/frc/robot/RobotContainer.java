@@ -6,14 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.robot.commands.TeleopCommand;
-import frc.robot.subsystems.Display;
-import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Outtake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Display;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,15 +24,11 @@ public class RobotContainer {
   //private final Outtake m_outtake = new Outtake();
   //private final Intake m_intake = new Intake();
   private final Display m_display = new Display();
-
-  private final XboxController XInput = new XboxController(0);
-
   //private final TeleopCommand m_teleopCommand = new TeleopCommand(m_drive, m_outtake, m_intake);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
-    Shuffleboard.getTab("Values");
     configureButtonBindings();
   }
 
@@ -53,10 +44,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {}
 
-  public XboxController getXInput(){
-    return XInput;
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -69,55 +56,5 @@ public class RobotContainer {
 
   public Command getTeleopCommand(){
     return new WaitCommand(1);
-  }
-
-  // copy-ith the evergreen joystick input code (I'm lazy)
-  public double getLeftYAxis(){
-    if(XInput == null){
-      return 0;
-    }
-    double item = (Math.abs(XInput.getLeftY()) > Constants.Controller.DEAD_ZONE) ? XInput.getLeftY() : 0;
-    return item;
-  }
-
-  public double getRightYAxis(){
-    if(XInput == null){
-      return 0;
-    }
-    double item = (Math.abs(XInput.getRightY()) > Constants.Controller.DEAD_ZONE) ? XInput.getRightY() : 0;
-    return item;
-  }
-
-public double getLeftXAxis(){
-    if(XInput == null){
-      return 0;
-    }
-    double item = (Math.abs(XInput.getLeftX()) > Constants.Controller.DEAD_ZONE) ? XInput.getLeftX() : 0;
-    return item;
-  }
-
-  public double getRightXAxis(){
-    if(XInput == null){
-      return 0;
-    }
-    double item = (Math.abs(XInput.getRightX()) > Constants.Controller.DEAD_ZONE) ? XInput.getRightX() : 0;
-    return item;
-  }
-
-  //real buttons
-
-  public int getXButton() {
-    int item = (XInput.getXButton() == true) ? 1 : 0;
-    return item; 
-  }
-
-  public int getYButton() {
-    int item = (XInput.getYButton() == true) ? 1 : 0;
-    return item; 
-  }
-
-  public int getAButton() {
-    int item = (XInput.getAButton() == true) ? 1 : 0;
-    return item; 
   }
 }
