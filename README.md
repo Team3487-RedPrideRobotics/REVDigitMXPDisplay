@@ -1,4 +1,5 @@
 # REVDigitMXPDisplay
+[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://Team3487-RedPrideRobotics.github.io/REVDigitMXPDisplay/javadoc/)
 Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
 
 Note that only one MXP Display can be controlled per robot. Becuase only one display can be active at a time, this class is provided as a singleton.
