@@ -5,6 +5,7 @@ Note that only one MXP Display can be controlled per robot. Becuase only one dis
 
 # Usage
 Copy the ```src``` folder into the root directory of your robot project
+Documentation can be found [here](Team3487-RedPrideRobotics.github.io/REVDigitMXPDisplay)
 
 # Todo
 | task         | progress         | associated branch/issue |
