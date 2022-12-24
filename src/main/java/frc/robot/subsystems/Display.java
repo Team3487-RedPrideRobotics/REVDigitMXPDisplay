@@ -40,6 +40,7 @@ public class Display extends SubsystemBase{
     private boolean AButtonReleased;
     DecimalFormat df_obj;
     private Timer idleTimer;
+    private boolean BButtonReleased;
 
     public Display(){
         displayBoard = new REVDigitBoard();
@@ -66,6 +67,7 @@ public class Display extends SubsystemBase{
         displayBoard.clear();
         idleTimer = new Timer();
         idleTimer.start();
+        BButtonReleased = true;
     }
 
     @Override
@@ -73,107 +75,101 @@ public class Display extends SubsystemBase{
         infoLoop();
     }
 
-    private void battery() {
+    public void battery(Boolean debug) {
         double voltage = RobotController.getBatteryVoltage();
-        displayBoard.displayText(df_obj.format(voltage).concat("V"));
+        displayBoard.displayText(df_obj.format(voltage).concat("V"),debug);
         
     }
+    public void battery() {
+        battery(false);
+        
+    }
+    
 
     private void infoLoop(){
         if(state=="idle"){
-            if(getAButtonPressed()){
+            if(displayBoard.getAButtonPressed()){
                 state="battery";
             }
-            idle();
+            if(displayBoard.getBButtonPressed()){
+                state="custom";
+            }
+            idle(true);
         }else if(state=="battery"){
-            if(getAButtonPressed()){
+            if(displayBoard.getAButtonPressed()){
                 state="idle";
             }
-            battery();
+            if(displayBoard.getBButtonPressed()){
+                state="custom";
+            }
+            battery(true);
+        }else if(state=="custom"){
+            if(displayBoard.getAButtonPressed()){
+                state="battery";
+            }
+            if(displayBoard.getBButtonPressed()){
+                state="idle";
+            }
+            customDisplay(true);
         }
     }
 
     @Override
     public void simulationPeriodic(){
-        
-    }
+    }   
 
     public boolean getAButtonPressed(){
-        if(!displayBoard.getButtonA() && AButtonReleased){
-            AButtonReleased = false;
-            return true;
-        }
-        AButtonReleased = displayBoard.getButtonA();
-        return false;
+        return displayBoard.getAButtonPressed();
     }
 
-    public byte[] getNetworkBytes(){
-        Boolean[] input = new Boolean[] {
-            oneD1Entry.getBoolean(false),
-            oneD2Entry.getBoolean(false),
-            oneD3Entry.getBoolean(false),
-            oneD4Entry.getBoolean(false),
-            oneD5Entry.getBoolean(false),
-            oneD6Entry.getBoolean(false),
-            oneD7Entry.getBoolean(false),
-            oneD8Entry.getBoolean(false),
-            twoD1Entry.getBoolean(false),
-            twoD2Entry.getBoolean(false),
-            twoD3Entry.getBoolean(false),
-            twoD4Entry.getBoolean(false),
-            twoD5Entry.getBoolean(false),
-            twoD6Entry.getBoolean(false),
-            twoD7Entry.getBoolean(false),
-            twoD8Entry.getBoolean(false)
-        };
-
-        SmartDashboard.putBooleanArray("Array",input);
-
-
-        BitSet m_bitArray = new BitSet(16);
-        for(int i=0;i<15;i++){
-            m_bitArray.set(i,input[i]);
-        }
-
-        SmartDashboard.putRaw("Thingy", m_bitArray.toByteArray());
-
-        return m_bitArray.toByteArray();
+    public boolean getBButtonPressed(){
+        return displayBoard.getBButtonPressed();
     }
-    private void idle(){
+    public void idle(boolean debug){
         if(idleTimer.get() < 0.2){
-            displayBoard.displayText("   3");
+            displayBoard.displayText("   3",debug);
             return;
         }
         if(idleTimer.get() < 0.4){
-            displayBoard.displayText("  34");
+            displayBoard.displayText("  34",debug);
             return;
         }
         if(idleTimer.get() < 0.6){
-            displayBoard.displayText(" 348");
+            displayBoard.displayText(" 348",debug);
             return;
         }
         if(idleTimer.get() < 0.8){
-            displayBoard.displayText("3487");
+            displayBoard.displayText("3487",debug);
             return;
         }
         if(idleTimer.get() < 1){
-            displayBoard.displayText("487 ");
+            displayBoard.displayText("487 ",debug);
             return;
         }
         if(idleTimer.get() < 1.2){
-            displayBoard.displayText("87  ");
+            displayBoard.displayText("87  ",debug);
             return;
         }
         if(idleTimer.get() < 1.4){
-            displayBoard.displayText("7   ");
+            displayBoard.displayText("7   ",debug);
             return;
         }
         if(idleTimer.get() < 1.6){
-            displayBoard.displayText("    ");
+            displayBoard.displayText("    ",debug);
             return;
         }
         if(idleTimer.get() > 2.6){
             idleTimer.reset();
         }
+    }
+
+    public void idle(){
+        idle(false);
+    }
+    public void customDisplay(Boolean debug){
+        displayBoard.displayText(stringEntry.getString("3487"),debug);
+    }
+    public void customDisplay(){
+        customDisplay(false);
     }
 }

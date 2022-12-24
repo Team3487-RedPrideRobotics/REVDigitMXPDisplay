@@ -3,14 +3,10 @@ package frc.robot.util;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.hal.simulation.SimDeviceCallback;
 import edu.wpi.first.wpilibj.AnalogInput;
 
-import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.function.IntPredicate;
 
 public class REVDigitBoard {
 	/*
@@ -31,12 +27,17 @@ public class REVDigitBoard {
 	
 	byte[][] charreg;
 	HashMap<Character, Integer> charmap;
+	private boolean AButtonReleased;
+	private boolean BButtonReleased;
 	
 	public REVDigitBoard() {
 		i2c = new I2C(Port.kMXP, 0x70);
 		buttonA = new DigitalInput(19);
 		buttonB = new DigitalInput(20);
 		pot = new AnalogInput(7);
+
+		AButtonReleased = true;
+		BButtonReleased = true;
 		
 		byte[] osc = new byte[1];
 	 	byte[] blink = new byte[1];
@@ -52,7 +53,7 @@ public class REVDigitBoard {
 		i2c.writeBulk(blink);
 		Timer.delay(.01);
 		
-		charreg = new byte[37][2]; //charreg is short for character registry
+		charreg = new byte[86][2]; //charreg is short for character registry
 		charmap = new HashMap<Character, Integer>(); 
 		
 		charreg[0][0] = (byte)0b00111111; charreg[0][1] = (byte)0b00000000; //0
@@ -218,54 +219,68 @@ public class REVDigitBoard {
 		charmap.put(':',79);
 		charreg[80][0] = (byte)0b00100010; charreg[80][1] = (byte)0b00000000; // double quote
 		charmap.put('"',80);
-	}
+		charreg[81][0] = (byte)0b00000000; charreg[81][1] = (byte)0b00101000; // caret
+		charmap.put('^',81);
+		charreg[82][0] = (byte)0b00111001; charreg[82][1] = (byte)0b00000000; // open parenthesis
+		charmap.put('(',82);
+		charreg[83][0] = (byte)0b00001111; charreg[83][1] = (byte)0b00000000; // close parenthesis
+		charmap.put(')',83);
+		charreg[84][0] = (byte)0b00111001; charreg[84][1] = (byte)0b00000000; // left curly brace
+		charmap.put('{',84);
+		charreg[85][0] = (byte)0b00001111; charreg[85][1] = (byte)0b00000000; // right curly brace
+		charmap.put('}',85);
+	}	
 
-	public void displayRaw(byte first, byte last){
-		byte[] byte1 = new byte[10];
-		byte1[0] = (byte)(0b0000111100001111);
- 		byte1[2] = first;
- 		byte1[3] = last;
- 		byte1[4] = first;
- 		byte1[5] = last;
- 		byte1[6] = first;
- 		byte1[7] = last;
- 		byte1[8] = first;
- 		byte1[9] = last;
- 		//send the array to the board
- 		i2c.writeBulk(byte1);
-	}
-
-	public Byte[] toDigitArray(String input){
+	
+	/**
+	 * Writes string to the display board
+	 * @param text the text to be written.
+	 * Characters after the fourth (excluding periods) will be ignored, as will periods placed before the first occurence of a non-period character.
+	 * Strings with less than four non-period character will be padded with spaces to the right.
+	 * @param debug will print out the string to be displayed if true
+	 */
+	public void displayText(String text, Boolean debug){
+		String outputString = "";
 		ArrayList<Byte> output = new ArrayList<Byte>();
 		int i = 0;
-		while(input.length() < 5){
-			input = input.concat(" ");
-		}
+		text = text.concat("     ");
 		while(output.size() < 8){
-			if(input.charAt(i) == '.'){
+			if(text.charAt(i) == '.'){
 				if(output.size() < 1){
 					i++;
 					continue;
 				}
+				// right shift last byte by six so that the sixth bit is in the 2^0 place. AND with one to eliminate all other digits, then check equivalence with 1.
+				if((output.get(output.size()-1) >> 6 & 1) == 1){
+					output.add((byte)0b00000000);
+					output.add((byte)0b01000000);
+					outputString = outputString.concat(" .");
+					i++;
+					continue;
+				}
 				output.set(output.size()-1, byteOr(output.get(output.size()-1), (byte)0b01000000));
+				outputString = outputString.concat(".");
 				i++;
 				continue;
 				
 			}
-			output.add(charreg[charmap.get(input.charAt(i))][0]);
-			output.add(charreg[charmap.get(input.charAt(i))][1]);
+			try{
+				output.add(charreg[charmap.get(text.charAt(i))][0]);
+				output.add(charreg[charmap.get(text.charAt(i))][1]);
+				outputString = outputString.concat(Character.toString(text.charAt(i)));
+			}catch(IndexOutOfBoundsException|NullPointerException e){
+				System.out.println("Attempted to display illegal character to REVDigitBoard - '" + text.charAt(i)+"'");
+				e.printStackTrace();
+			}	
 			i++;
 		}
-		if(input.charAt(input.length()-1) == '.'){
+		if(text.charAt(i) == '.'){
 			output.set(output.size()-1, byteOr(output.get(output.size()-1), (byte)0b01000000));
+			outputString = outputString.concat(".");
 		}
-		Byte[] outputArray = {};
-		outputArray = output.toArray(outputArray);
-		return outputArray;
-	}
-
-	public void displayText(String text){
-		Byte[] bytez = toDigitArray(text);
+		
+		Byte[] bytez = {};
+		bytez = output.toArray(bytez);
 		byte[] outputByte = new byte[10];
 		outputByte[0] = (byte)(0b0000111100001111);
 		outputByte[2] = bytez[6];
@@ -277,54 +292,80 @@ public class REVDigitBoard {
 		outputByte[8] = bytez[0];
 		outputByte[9] = bytez[1];
 		i2c.writeBulk(outputByte);
-		System.out.println(text);
+		if(debug){
+			System.out.println(outputString);
+		}
+	}
+
+	/**
+	 * Writes string to the display board
+	 * @param text the text to be written.
+	 * Characters after the fourth (excluding periods) will be ignored, as will periods placed before the first occurence of a non-period character.
+	 * Strings with less than four non-period character will be padded with spaces to the right.
+	 */
+	public void displayText(String text){
+		displayText(text, false);
 	}
 	
 	
 	public void clear() {
-		 int[] charz = {36,36,36,36}; // whyy java
-		 this._display(charz);
+		 displayText("    ");
 	 }
-	 
+	 /**
+	  * 
+	  * @return true if button is released, false if button is held
+	  */
 	public boolean getButtonA() {
 		 return buttonA.get();
 	 }
+	 /**
+	  * 
+	  * @return true if button is released, false is button is held
+	  */
 	public boolean getButtonB() {
 		 return buttonB.get();
 	 }
+	/**
+	 * 
+	 * @return voltage running through potentiometer
+	 */
 	public double getPot() {
 		 return pot.getVoltage();
 	 }
+
+	 /**
+	 * 
+	 * @return true the first function call that the a button is pressed for
+	 */
+	 public boolean getAButtonPressed(){
+        if(!getButtonA() && AButtonReleased){
+            AButtonReleased = false;
+            return true;
+        }
+        AButtonReleased = getButtonA();
+        return false;
+    }
+
+	/**
+	 * 
+	 * @return true the first function call that the b button is pressed for
+	 */
+	public boolean getBButtonPressed(){
+        if(!getButtonB() && BButtonReleased){
+            BButtonReleased = false;
+            return true;
+        }
+        BButtonReleased = getButtonB();
+        return false;
+    }
 	
 ////// not supposed to be publicly used..
-	
-	void _display(int[] charz) {
-		byte[] byte1 = new byte[10];
-		byte1[0] = (byte)(0b0000111100001111);
- 		byte1[2] = charreg[charz[3]][0];
- 		byte1[3] = charreg[charz[3]][1];
- 		byte1[4] = charreg[charz[2]][0];
- 		byte1[5] = charreg[charz[2]][1];
- 		byte1[6] = charreg[charz[1]][0];
- 		byte1[7] = charreg[charz[1]][1];
- 		byte1[8] = charreg[charz[0]][0];
- 		byte1[9] = charreg[charz[0]][1];
- 		//send the array to the board
- 		i2c.writeBulk(byte1);
-	}
-	
-	String repeat(char c, int n) {
-	    char[] arr = new char[n];
-	    Arrays.fill(arr, c);
-	    return new String(arr);
-	}
 
-	byte byteOr(byte first, byte second){
+	private byte byteOr(byte first, byte second){
 		BitSet firstBitSet = BitSet.valueOf(new byte[] {first});
 		BitSet secondBitSet = BitSet.valueOf(new byte[] {second});
 		firstBitSet.or(secondBitSet);
 		return firstBitSet.toByteArray()[0];
 
 	}
-	
 }
