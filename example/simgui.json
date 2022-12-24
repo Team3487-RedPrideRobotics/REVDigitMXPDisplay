@@ -38,8 +38,8 @@
       }
     },
     "RoboRIO": {
-      "window": {
-        "visible": true
+      "RoboRIO Input": {
+        "open": true
       }
     }
   },
