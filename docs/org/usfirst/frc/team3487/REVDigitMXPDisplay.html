@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":9,"i11":10,"i12":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":9,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -133,7 +133,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">REVDigitMXPDisplay</span>
 extends java.lang.Object</pre>
 <div class="block">Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
- Note that only one MXP Display can be controlled per robot</div>
+ Note that only one MXP Display can be controlled per robot. Because of this, the class is provided as a singleton.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>0.1.0</dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -200,69 +204,76 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#displayBatterySOC()">displayBatterySOC</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Displays the battery's State of Charge as a percentage.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#displayScrollText(java.lang.String,double)">displayScrollText</a></span>&#8203;(java.lang.String&nbsp;text,
                  double&nbsp;delay)</code></th>
 <td class="colLast">
 <div class="block">Sets string to scroll across display (should be called every loop of robot program)</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#displayText(java.lang.String)">displayText</a></span>&#8203;(java.lang.String&nbsp;text)</code></th>
 <td class="colLast">
 <div class="block">Writes string to the display board</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAButtonPressed()">getAButtonPressed</a></span>()</code></th>
 <td class="colLast">
 <div class="block">returns true the first function call that the A button is pressed for.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBButtonPressed()">getBButtonPressed</a></span>()</code></th>
 <td class="colLast">
 <div class="block">returns true the first function call that the B button is pressed for.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonA()">getButtonA</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get value of button A's DigitalInput.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonB()">getButtonB</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get value of button B's DigitalInput.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDebug()">getDebug</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get whether or not the MXP Display is in debug mode.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="REVDigitMXPDisplay.html" title="class in org.usfirst.frc.team3487">REVDigitMXPDisplay</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstance()">getInstance</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Fetches the singleton instance of this class</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPot()">getPot</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get voltage across the potentiometer.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDebug(boolean)">setDebug</a></span>&#8203;(boolean&nbsp;debug)</code></th>
 <td class="colLast">
@@ -412,6 +423,19 @@ extends java.lang.Object</pre>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#displayBattery(java.text.DecimalFormat)"><code>displayBattery(DecimalFormat)</code></a></dd>
 </dl>
+</li>
+</ul>
+<a id="displayBatterySOC()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>displayBatterySOC</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;displayBatterySOC()</pre>
+<div class="block">Displays the battery's State of Charge as a percentage.
+ 
+ This value is calculated according to <a href="https://modernsurvivalblog.com/wp-content/uploads/2021/02/battery-state-of-charge-chart_v2.jpg">this chart.</a>
+ Generally, a value above 80% should work for the purposes of an FRC Robot</div>
 </li>
 </ul>
 <a id="clear()">
