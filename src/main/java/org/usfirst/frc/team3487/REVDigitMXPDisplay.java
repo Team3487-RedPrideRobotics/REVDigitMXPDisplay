@@ -269,7 +269,7 @@ public class REVDigitMXPDisplay {
     }
 
     /**
-	 * 
+	 * Fetches the singleton instance of this class
 	 * @return singleton of the REV Display
 	 */
 	public static REVDigitMXPDisplay getInstance(){
