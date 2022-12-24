@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":9,"i8":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -88,13 +88,13 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -133,18 +133,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">REVDigitMXPDisplay</span>
 extends java.lang.Object</pre>
 <div class="block">Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
- Note that only one MXP Display can be controlled per robot.
- Becuase only one display can be active at a time, this class is provided as a singleton.</div>
-<dl>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>0.1.0</dd>
-</dl>
+ Note that only one MXP Display can be controlled per robot</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section>
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="REVDigitMXPDisplay.html" title="class in org.usfirst.frc.team3487">REVDigitMXPDisplay</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#m_display">m_display</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ========== METHOD SUMMARY =========== -->
 <section>
 <ul class="blockList">
@@ -162,64 +180,67 @@ extends java.lang.Object</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#clear()">clear</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Clears display text</div>
-</td>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#displayScrollText(java.lang.String,double)">displayScrollText</a></span>&#8203;(java.lang.String&nbsp;text,
+                 double&nbsp;delay)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#displayScrollText(java.lang.String,double,boolean)">displayScrollText</a></span>&#8203;(java.lang.String&nbsp;text,
+                 double&nbsp;delay,
+                 boolean&nbsp;debug)</code></th>
+<td class="colLast">
+<div class="block">Sets string to scroll across display (should be called every loop of robot program)</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#displayText(java.lang.String)">displayText</a></span>&#8203;(java.lang.String&nbsp;text)</code></th>
 <td class="colLast">
 <div class="block">Writes string to the display board</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#displayText(java.lang.String,java.lang.Boolean)">displayText</a></span>&#8203;(java.lang.String&nbsp;text,
            java.lang.Boolean&nbsp;debug)</code></th>
 <td class="colLast">
-<div class="block">Writes string to the display board.</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAButtonPressed()">getAButtonPressed</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Gets value of button A once per press.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBButtonPressed()">getBButtonPressed</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Gets value of button B once per press.</div>
+<div class="block">Writes string to the display board</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonA()">getButtonA</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Gets value of button A's DigitalInput.</div>
-</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAButtonPressed()">getAButtonPressed</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonB()">getButtonB</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Gets value of button B's DigitalInput.</div>
-</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBButtonPressed()">getBButtonPressed</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonA()">getButtonA</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonB()">getButtonB</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="REVDigitMXPDisplay.html" title="class in org.usfirst.frc.team3487">REVDigitMXPDisplay</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstance()">getInstance</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPot()">getPot</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Gets value of the potentiometer.</div>
-</td>
+<td class="colLast">&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -238,6 +259,25 @@ extends java.lang.Object</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section>
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="m_display">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>m_display</h4>
+<pre>public static&nbsp;<a href="REVDigitMXPDisplay.html" title="class in org.usfirst.frc.team3487">REVDigitMXPDisplay</a> m_display</pre>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section>
 <ul class="blockList">
@@ -254,7 +294,7 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public static&nbsp;<a href="REVDigitMXPDisplay.html" title="class in org.usfirst.frc.team3487">REVDigitMXPDisplay</a>&nbsp;getInstance()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>Singleton of the REV Display.</dd>
+<dd>singleton of the REV Display</dd>
 </dl>
 </li>
 </ul>
@@ -266,13 +306,13 @@ extends java.lang.Object</pre>
 <h4>displayText</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;displayText&#8203;(java.lang.String&nbsp;text,
                         java.lang.Boolean&nbsp;debug)</pre>
-<div class="block">Writes string to the display board.</div>
+<div class="block">Writes string to the display board</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>text</code> - The text to be written.
+<dd><code>text</code> - the text to be written.
  Characters after the fourth (excluding periods) will be ignored, as will periods placed before the first occurence of a non-period character.
  Strings with less than four non-period character will be padded with spaces to the right.</dd>
-<dd><code>debug</code> - Will print out the string to be displayed if true.</dd>
+<dd><code>debug</code> - will print out the string to be displayed if true</dd>
 </dl>
 </li>
 </ul>
@@ -292,6 +332,34 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a id="displayScrollText(java.lang.String,double,boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>displayScrollText</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;displayScrollText&#8203;(java.lang.String&nbsp;text,
+                              double&nbsp;delay,
+                              boolean&nbsp;debug)</pre>
+<div class="block">Sets string to scroll across display (should be called every loop of robot program)</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>text</code> - The text to be written. Text will be processed similarly to { @link displayText(String text) }.</dd>
+<dd><code>delay</code> - Delay between character movements in seconds</dd>
+<dd><code>debug</code> - will print out the string to be displayed if true</dd>
+</dl>
+</li>
+</ul>
+<a id="displayScrollText(java.lang.String,double)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>displayScrollText</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;displayScrollText&#8203;(java.lang.String&nbsp;text,
+                              double&nbsp;delay)</pre>
+</li>
+</ul>
 <a id="clear()">
 <!--   -->
 </a>
@@ -299,7 +367,6 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>clear</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;clear()</pre>
-<div class="block">Clears display text</div>
 </li>
 </ul>
 <a id="getButtonA()">
@@ -309,10 +376,9 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getButtonA</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;getButtonA()</pre>
-<div class="block">Gets value of button A's DigitalInput.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>True if button is released, false if button is held.</dd>
+<dd>true if button is released, false if button is held</dd>
 </dl>
 </li>
 </ul>
@@ -323,10 +389,9 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getButtonB</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;getButtonB()</pre>
-<div class="block">Gets value of button B's DigitalInput.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>True if button is released, false is button is held.</dd>
+<dd>true if button is released, false is button is held</dd>
 </dl>
 </li>
 </ul>
@@ -337,10 +402,9 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getPot</h4>
 <pre class="methodSignature">public&nbsp;double&nbsp;getPot()</pre>
-<div class="block">Gets value of the potentiometer.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>Voltage of the potentiometer.</dd>
+<dd>voltage running through potentiometer</dd>
 </dl>
 </li>
 </ul>
@@ -351,10 +415,9 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getAButtonPressed</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;getAButtonPressed()</pre>
-<div class="block">Gets value of button A once per press.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>True the first function call that the A button is pressed for.</dd>
+<dd>true the first function call that the a button is pressed for</dd>
 </dl>
 </li>
 </ul>
@@ -365,10 +428,9 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getBButtonPressed</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;getBButtonPressed()</pre>
-<div class="block">Gets value of button B once per press.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>True the first function call that the B button is pressed for.</dd>
+<dd>true the first function call that the b button is pressed for</dd>
 </dl>
 </li>
 </ul>
@@ -423,13 +485,13 @@ extends java.lang.Object</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
