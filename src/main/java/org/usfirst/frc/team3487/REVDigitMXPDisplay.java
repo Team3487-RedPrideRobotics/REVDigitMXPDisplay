@@ -395,26 +395,28 @@ public class REVDigitMXPDisplay {
 		displayText(batteryDTF.format(RobotController.getBatteryVoltage()));
 	}
 	
-	
+	/**
+	 * Clears the display by sending it four spaces.
+	 */
 	public void clear() {
 		 displayText("    ");
 	 }
 	 /**
-	  * 
+	  * Get value of button A's DigitalInput.
 	  * @return true if button is released, false if button is held
 	  */
 	public boolean getButtonA() {
 		 return buttonA.get();
 	 }
 	 /**
-	  * 
+	  * Get value of button B's DigitalInput.
 	  * @return true if button is released, false is button is held
 	  */
 	public boolean getButtonB() {
 		 return buttonB.get();
 	 }
 	/**
-	 * 
+	 * Get voltage across the potentiometer.
 	 * @return voltage running through potentiometer
 	 */
 	public double getPot() {
@@ -422,8 +424,8 @@ public class REVDigitMXPDisplay {
 	 }
 
 	 /**
-	 * 
-	 * @return true the first function call that the a button is pressed for
+	 * returns true the first function call that the A button is pressed for.
+	 * @return whether or not the A button has been pressed
 	 */
 	 public boolean getAButtonPressed(){
         if(!getButtonA() && AButtonReleased){
@@ -435,8 +437,8 @@ public class REVDigitMXPDisplay {
     }
 
 	/**
-	 * 
-	 * @return true the first function call that the b button is pressed for
+	 * returns true the first function call that the B button is pressed for.
+	 * @return whether or not the B button has been pressed
 	 */
 	public boolean getBButtonPressed(){
         if(!getButtonB() && BButtonReleased){
