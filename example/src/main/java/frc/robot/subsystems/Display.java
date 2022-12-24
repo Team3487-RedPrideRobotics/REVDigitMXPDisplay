@@ -1,13 +1,17 @@
 package frc.robot.subsystems;
 
+import java.sql.Driver;
 import java.text.DecimalFormat;
 
 import org.usfirst.frc.team3487.REVDigitMXPDisplay;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Display extends SubsystemBase{
 
@@ -19,7 +23,7 @@ public class Display extends SubsystemBase{
 
     public Display(){
         displayBoard = REVDigitMXPDisplay.getInstance();
-        stringEntry = Shuffleboard.getTab("Display").add("String","3487").getEntry();
+        stringEntry = Shuffleboard.getTab("Display").add("String",Integer.toString(Constants.TEAM_NUMBER)).getEntry();
         state = "idle";
         df_obj = new DecimalFormat("##.0V");
         displayBoard.setDebug(true);
@@ -63,7 +67,7 @@ public class Display extends SubsystemBase{
             if(displayBoard.getBButtonPressed()){
                 state="idle";
             }
-            customDisplay();
+            batteryPercent();
         }
     }
 
@@ -71,10 +75,14 @@ public class Display extends SubsystemBase{
     public void simulationPeriodic(){
     }
     public void idle(){
-        displayBoard.displayScrollText("3487", 0.2);
+        displayBoard.displayScrollText(Integer.toString(Constants.TEAM_NUMBER), 0.2);
     }
 
     public void customDisplay(){
-        displayBoard.displayScrollText(stringEntry.getString("3487"), 0.2);
+        displayBoard.displayScrollText(stringEntry.getString(Integer.toString(Constants.TEAM_NUMBER)), 0.2);
+    }
+
+    public void batteryPercent(){
+        displayBoard.displayBatterySOC();
     }
 }

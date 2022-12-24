@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
- * Note that only one MXP Display can be controlled per robot
+ * Note that only one MXP Display can be controlled per robot. Because of this, the class is provided as a singleton.
+ * @author SilicaSandwhich
+ * @since 0.1.0
+ * @version 0.3.0
  */
 public class REVDigitMXPDisplay {
 
@@ -39,6 +42,7 @@ public class REVDigitMXPDisplay {
 	private DecimalFormat batteryDTF;
 
 	private boolean debug;
+
 	
 	private REVDigitMXPDisplay() {
 		i2c = new I2C(Port.kMXP, 0x70);
@@ -71,7 +75,7 @@ public class REVDigitMXPDisplay {
 		i2c.writeBulk(blink);
 		Timer.delay(.01);
 		
-		charreg = new byte[86][2]; //charreg is short for character registry
+		charreg = new byte[87][2]; //charreg is short for character registry
 		charmap = new HashMap<Character, Integer>(); 
 
 		// many of these are sourced from Vampjaz's bindings https://github.com/vampjaz/REVDigitBoard). The rest were created by hand.
@@ -249,6 +253,8 @@ public class REVDigitMXPDisplay {
 		charmap.put('{',84);
 		charreg[85][0] = (byte)0b00001111; charreg[85][1] = (byte)0b00000000; // right curly brace
 		charmap.put('}',85);
+		charreg[86][0] = (byte)0b00100100; charreg[86][1] = (byte)0b00100100; // percent sign
+		charmap.put('%',86);
 	}	
 
 	/**
@@ -394,6 +400,16 @@ public class REVDigitMXPDisplay {
 	public void displayBattery(){
 		displayText(batteryDTF.format(RobotController.getBatteryVoltage()));
 	}
+
+	/**
+	 * Displays the battery's State of Charge as a percentage.
+	 * 
+	 * This value is calculated according to <a href="https://modernsurvivalblog.com/wp-content/uploads/2021/02/battery-state-of-charge-chart_v2.jpg">this chart.</a>
+	 * Generally, a value above 80% should work for the purposes of an FRC Robot
+	 */
+	public void displayBatterySOC(){
+		displayText(Integer.toString((int) getBatterySOC()).concat("%"));
+	}
 	
 	/**
 	 * Clears the display by sending it four spaces.
@@ -458,5 +474,9 @@ public class REVDigitMXPDisplay {
 		firstBitSet.or(secondBitSet);
 		return firstBitSet.toByteArray()[0];
 
+	}
+	// according to this chart: https://modernsurvivalblog.com/wp-content/uploads/2021/02/battery-state-of-charge-chart_v2.jpg
+	private double getBatterySOC(){
+		return 73.1074*RobotController.getBatteryVoltage() - 833.255;
 	}
 }
