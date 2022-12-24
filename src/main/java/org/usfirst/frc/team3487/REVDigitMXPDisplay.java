@@ -351,7 +351,6 @@ public class REVDigitMXPDisplay {
 	 * Sets string to scroll across display (should be called every loop of robot program)
 	 * @param text The text to be written. Text will be processed similarly to { @link displayText(String text) }.
 	 * @param delay Delay between character movements in seconds
-	 * @param debug will print out the string to be displayed if true
 	 */
 	public void displayScrollText(String text, double delay){
 		String finaltext = "    ".concat(text).concat("     ");
