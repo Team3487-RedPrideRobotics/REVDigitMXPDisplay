@@ -1,4 +1,4 @@
-package frc.robot.util;
+package org.usfirst.frc.team3487;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
@@ -8,18 +8,13 @@ import edu.wpi.first.wpilibj.AnalogInput;
 
 import java.util.*;
 
+/**
+ * Bindings for a REV Digit MXP Display wired to the MXP Port of a RoboRIO. 
+ * Note that only one MXP Display can be controlled per robot
+ */
 public class REVDigitMXPDisplay {
-	/*
-	 * DOCUMENTATION::
-	 * 
-	 * REVDigitBoard() : constructor
-	 * void display(String str) : displays the first four characters of the string (only alpha (converted to uppercase), numbers, and spaces)
-	 * void display(double batt) : displays a decimal number (like battery voltage) in the form of 12.34 (ten-one-decimal-tenth-hundredth)
-	 * void clear() : clears the display
-	 * boolean getButtonA() : button A on the board
-	 * boolean getButtonB() : button B on the board
-	 * double getPot() : potentiometer value
-	 */
+
+	public static REVDigitMXPDisplay m_display = new REVDigitMXPDisplay();
 	
 	I2C i2c;
 	DigitalInput buttonA, buttonB;
@@ -30,7 +25,7 @@ public class REVDigitMXPDisplay {
 	private boolean AButtonReleased;
 	private boolean BButtonReleased;
 	
-	public REVDigitMXPDisplay() {
+	private REVDigitMXPDisplay() {
 		i2c = new I2C(Port.kMXP, 0x70);
 		buttonA = new DigitalInput(19);
 		buttonB = new DigitalInput(20);
@@ -55,6 +50,8 @@ public class REVDigitMXPDisplay {
 		
 		charreg = new byte[86][2]; //charreg is short for character registry
 		charmap = new HashMap<Character, Integer>(); 
+
+		// many of these are sourced from Vampjaz's bindings https://github.com/vampjaz/REVDigitBoard). The rest were created by hand.
 		
 		charreg[0][0] = (byte)0b00111111; charreg[0][1] = (byte)0b00000000; //0
 		charmap.put('0',0);
@@ -231,6 +228,14 @@ public class REVDigitMXPDisplay {
 		charmap.put('}',85);
 	}	
 
+	/**
+	 * 
+	 * @return singleton of the REV Display
+	 */
+	public static REVDigitMXPDisplay getInstance(){
+		return m_display;
+	}
+
 	
 	/**
 	 * Writes string to the display board
@@ -242,30 +247,31 @@ public class REVDigitMXPDisplay {
 	public void displayText(String text, Boolean debug){
 		String outputString = "";
 		ArrayList<Byte> output = new ArrayList<Byte>();
-		int i = 0;
-		text = text.concat("     ");
-		while(output.size() < 8){
+		int i = 0; // index of string, used to iterate each individual character.
+		text = text.concat("     "); // Padding so strings with length < 4 don't cause error
+		while(output.size() < 8){ // i2c expects nine bytes (1 instruction byte and 2 for each digit)
 			if(text.charAt(i) == '.'){
 				if(output.size() < 1){
 					i++;
 					continue;
 				}
-				// right shift last byte by six so that the sixth bit is in the 2^0 place. AND with one to eliminate all other digits, then check equivalence with 1.
+				// right shift last byte by six so that the seventh bit is in the 2^0 place. AND with one to eliminate all other digits, then check equivalence with 1.
 				if((output.get(output.size()-1) >> 6 & 1) == 1){
 					output.add((byte)0b00000000);
-					output.add((byte)0b01000000);
+					output.add((byte)0b01000000); // seventh bit controls decimal point/period
 					outputString = outputString.concat(" .");
 					i++;
 					continue;
 				}
-				output.set(output.size()-1, byteOr(output.get(output.size()-1), (byte)0b01000000));
+				output.set(output.size()-1, byteOr(output.get(output.size()-1), (byte)0b01000000)); // OR'ing the most recent byte with 0b01000000 will always set the seventh bit to 1
 				outputString = outputString.concat(".");
 				i++;
 				continue;
 				
 			}
-			try{
-				output.add(charreg[charmap.get(text.charAt(i))][0]);
+			// try/catch filters out characters not defined in the charmap/charreg
+			try{ 
+				output.add(charreg[charmap.get(text.charAt(i))][0]); 
 				output.add(charreg[charmap.get(text.charAt(i))][1]);
 				outputString = outputString.concat(Character.toString(text.charAt(i)));
 			}catch(IndexOutOfBoundsException|NullPointerException e){
@@ -274,6 +280,7 @@ public class REVDigitMXPDisplay {
 			}	
 			i++;
 		}
+		// four non-period characters have been processed, so 'i' will either point to the final period or an extraneous character.
 		if(text.charAt(i) == '.'){
 			output.set(output.size()-1, byteOr(output.get(output.size()-1), (byte)0b01000000));
 			outputString = outputString.concat(".");
@@ -282,7 +289,11 @@ public class REVDigitMXPDisplay {
 		Byte[] bytez = {};
 		bytez = output.toArray(bytez);
 		byte[] outputByte = new byte[10];
+		// sending bytes to the display board
+		// first byte is the instruction
 		outputByte[0] = (byte)(0b0000111100001111);
+		// then, the characters are sent right to left.
+		// The first byte of each character represents the eight "seven-segment"-esque segments, and the second represents the others.
 		outputByte[2] = bytez[6];
 		outputByte[3] = bytez[7];
 		outputByte[4] = bytez[4];
@@ -359,9 +370,10 @@ public class REVDigitMXPDisplay {
         return false;
     }
 	
-////// not supposed to be publicly used..
+	// Private Methods
 
 	private byte byteOr(byte first, byte second){
+		// Probably not the correct way to do this but it works
 		BitSet firstBitSet = BitSet.valueOf(new byte[] {first});
 		BitSet secondBitSet = BitSet.valueOf(new byte[] {second});
 		firstBitSet.or(secondBitSet);
