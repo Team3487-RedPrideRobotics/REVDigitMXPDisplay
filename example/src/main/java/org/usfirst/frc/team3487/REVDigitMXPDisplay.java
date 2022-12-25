@@ -355,9 +355,11 @@ public class REVDigitMXPDisplay {
 	}
 	/**
 	 * Sets string to scroll across display (should be called every loop of robot program)
-	 * @param text The text to be written. Text will be processed similarly to { @link displayText(String text) }.
-	 * Note that because text is processed with the same rules as { @link displayText(String text) }, nothing will be shown on the display when the scrolling section contains only periods.
+	 * 
+	 * @param text The text to be written. Text will be processed similarly to { @link #displayText(String) displayText}
+	 * Note that because text is processed with the same rules as { @link #displayText(String) displayText}, nothing will be shown on the display when the scrolling section contains only periods.
 	 * @param delay Delay between character movements in seconds
+	 * @see #displayText(String)
 	 */
 	public void displayScrollText(String text, double delay){
 		String finaltext = "   ".concat(text).concat("     ");
