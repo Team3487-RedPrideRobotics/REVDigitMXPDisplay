@@ -67,7 +67,7 @@ public class Display extends SubsystemBase{
             if(displayBoard.getBButtonPressed()){
                 state="idle";
             }
-            batteryPercent();
+            customDisplay();
         }
     }
 

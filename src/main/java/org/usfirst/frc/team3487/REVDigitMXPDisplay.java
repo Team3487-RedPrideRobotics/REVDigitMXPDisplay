@@ -356,29 +356,36 @@ public class REVDigitMXPDisplay {
 	/**
 	 * Sets string to scroll across display (should be called every loop of robot program)
 	 * @param text The text to be written. Text will be processed similarly to { @link displayText(String text) }.
+	 * Note that because text is processed with the same rules as { @link displayText(String text) }, nothing will be shown on the display when the scrolling section contains only periods.
 	 * @param delay Delay between character movements in seconds
 	 */
 	public void displayScrollText(String text, double delay){
-		String finaltext = "    ".concat(text).concat("     ");
-		if(scrollMarker+scrollOffset > finaltext.length()-5){
+		String finaltext = "   ".concat(text).concat("     ");
+		try{
+			finaltext.substring(scrollMarker+scrollOffset2);
+		}catch(StringIndexOutOfBoundsException e){
+			scrollMarker = 0;
+			scrollOffset2 = 0;
+			scrollTimer.reset();
+		}
+
+		if(finaltext.substring(scrollMarker+scrollOffset2).strip() == ""){
+			if(scrollTimer.get() > scrollMarker * delay){
+				clear();
+				scrollMarker++;
+			}
 			if(scrollTimer.get() > finaltext.length() * delay){
 				scrollMarker = 0;
-				scrollOffset = 0;
 				scrollOffset2 = 0;
 				scrollTimer.reset();
-				clear();
 			}
 			return;
 		}
 		if(scrollTimer.get() > delay * scrollMarker){
-			if(finaltext.charAt(scrollMarker+scrollOffset2) == '.'){
+			if(finaltext.charAt(scrollMarker+scrollOffset2) == '.' && finaltext.charAt(scrollMarker+scrollOffset2+1) != '.'){
 				scrollOffset2 ++;
 			}
-			String toDisplay = finaltext.substring(scrollMarker+scrollOffset2, scrollMarker+4+scrollOffset);
-			if(finaltext.charAt(scrollMarker+4+scrollOffset) == '.'){
-				toDisplay = toDisplay.concat(".");
-				scrollOffset++;
-			}
+			String toDisplay = finaltext.substring(scrollMarker+scrollOffset2);
 			displayText(toDisplay);
 			scrollMarker++;
 		}
