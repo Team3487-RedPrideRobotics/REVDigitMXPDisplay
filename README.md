@@ -15,7 +15,7 @@ Example usage can be found in the "example" folder.
 | Create JavaDocs | finished | N/A |
 | Shuffleboard indicator | not started | N/A |
 | More ASCII Characters | not started | N/A |
-| Built-in Battery display function & animations | finished | N/A |
+| Built-in Battery display function & animations | In Progress | Battery Voltage & SoC, and scrolling text finished. Other options in consideration |
 | Gradle packaging| finished | N/A|
 | Stop committing directly to the main branch challenge | impossible | N/A |
  # Acknowledgements
